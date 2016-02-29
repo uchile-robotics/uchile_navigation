@@ -1,0 +1,4 @@
+# .gitignore for auto-generated files
+cfg/cpp/*
+docs/
+src/bender_cmd_vel_mux/

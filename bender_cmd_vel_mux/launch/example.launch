@@ -1,0 +1,17 @@
+<launch>
+
+	<!--
+	Example standalone launcher for the velocity multiplexer.
+
+	
+	For best results you would usually load this into the core control system
+	to avoid latency for reactive controllers. However for other apps, running
+	it standalone with a similar configuration will also work.
+	-->
+
+	<node pkg="nodelet" type="nodelet" name="nodelet_manager" args="manager"/>
+
+	<node pkg="nodelet" type="nodelet" name="bender_cmd_vel_mux" args="load bender_cmd_vel_mux/CmdVelMuxNodelet nodelet_manager">
+		<param name="yaml_cfg_file" value="$(find bender_cmd_vel_mux)/param/example.yaml"/>
+	</node>
+</launch>
