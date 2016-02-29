@@ -1,0 +1,42 @@
+<launch>
+	<arg name="slam" default="false"/>
+
+	<!--
+	Select local and global planners.
+    + global planners:
+	  - "navfn"              (recommended)
+	  - "global_planner"
+	+ local planners:
+	  - "dwa_local_planner"  (recommended)
+	  - "base_local_planner"
+	-->
+	<arg name="global_planner" value="navfn"/>
+	<arg name="local_planner"  value="base_local_planner"/>
+
+	<node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen" ns="/bender/nav/">
+
+		<!-- general parameters -->
+		<rosparam file="$(find bender_nav)/config/move_base/move_base.yaml" command="load"/>
+
+		<!-- costmap parameters -->
+		<rosparam file="$(find bender_nav)/config/move_base/costmap_common.yaml" command="load" ns="global_costmap"/>
+		<rosparam file="$(find bender_nav)/config/move_base/costmap_common.yaml" command="load" ns="local_costmap"/>
+		<rosparam file="$(find bender_nav)/config/move_base/global_costmap.yaml" command="load"/>
+		<rosparam file="$(find bender_nav)/config/move_base/local_costmap.yaml"  command="load"/>
+		
+		<!-- planner parameters -->
+		<rosparam file="$(find bender_nav)/config/move_base/planner/$(arg global_planner).yaml" command="load"/>
+		<rosparam file="$(find bender_nav)/config/move_base/planner/$(arg local_planner).yaml" command="load"/>
+
+		<!-- slam specific configuration -->
+		<!-- this will set up an extra dummy parameter for one of the global planners -->
+		<param name="NavfnROS/allow_unknown"      value="true" if="$(arg slam)"/>
+		<param name="GlobalPlanner/allow_unknown" value="true" if="$(arg slam)"/>
+
+		<!-- remapping -->
+		<remap from="map" to="/map"/>
+		<remap from="cmd_vel" to="move_base/cmd_vel"/>
+
+	</node>
+
+</launch>

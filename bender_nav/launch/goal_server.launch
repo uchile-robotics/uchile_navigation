@@ -1,0 +1,20 @@
+<launch>
+
+	<arg name="slam" default="false"/>
+
+	<!-- Goal Server -->
+	<node pkg="bender_nav" type="goal_server"  name="goal_server" output="screen" respawn="true" ns="/bender/nav/">
+		
+		<!-- load default parameters -->
+		<rosparam file="$(find bender_nav)/config/bender_nav/goal_server.yaml"/>
+
+		<!-- correct if necessary -->
+		<param name="is_map_static" value="false"                   if="$(arg slam)"/>
+		<param name="map_service"   value="/bender/nav/dynamic_map" if="$(arg slam)"/>
+
+		<!-- remap services -->
+		<remap from="goal_server/make_plan" to="/bender/nav/move_base/make_plan"/>
+
+	</node>
+
+</launch>

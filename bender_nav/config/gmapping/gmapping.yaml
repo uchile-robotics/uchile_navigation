@@ -1,0 +1,33 @@
+# parametros no listados son default
+# from openslam.org/gmapping:
+# - This version is optimized for long-range laser scanners like SICK LMS
+#   or PLS scanner. Short range lasers like Hokuyo scanner will not work 
+#   that well with the standard parameter settings. 
+
+
+# wrapper parameters
+throttle_scans: 1
+base_frame: /bender/base_link
+map_frame: /map
+odom_frame: /bender/odom
+map_update_interval: 3
+
+# initial map dimensions and resolution
+xmin: -20
+xmax: 20
+ymin: -20
+ymax: 20
+delta: 0.02
+
+# laser parameters
+#maxUrange
+#maxRange
+
+# others
+temporalUpdate: 2.5
+transform_publish_period: 0.05
+
+# motion model parameters
+# likelihood sampling (used in scan matching)
+
+# others

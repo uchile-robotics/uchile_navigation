@@ -1,0 +1,15 @@
+<launch>
+
+	<node pkg="amcl" type="amcl" name="amcl" respawn="true" output="screen" ns="/bender/nav/">
+		<remap from="scan" to="amcl/scan"/>
+		<remap from="map" to="/map"/>
+		<rosparam file="$(find bender_nav)/config/amcl/amcl_diff.yaml" command="load"/>
+	</node>
+
+	<!-- laser_front relay -->
+	<node pkg="topic_tools" type="relay" name="amcl_scan_front_relay" ns="/bender/nav/" args="/bender/sensors/laser_front/scan /bender/nav/amcl/scan"/>
+
+	<!-- laser_rear relay -->
+	<node pkg="topic_tools" type="relay" name="amcl_scan_rear_relay" ns="/bender/nav/" args="/bender/sensors/laser_rear/scan /bender/nav/amcl/scan"/>
+
+</launch>

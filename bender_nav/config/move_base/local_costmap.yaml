@@ -1,0 +1,42 @@
+local_costmap:
+
+ # Coordinate frame and tf parameters
+ global_frame: /bender/odom
+
+ # Map management parameters
+ # - - - - - - - - - - - - - -
+ static_map: false      # local map is dynamic
+ rolling_window: true   # (keep the robot in the center of the costmap) we care about obstacles around the robot 
+ width: 5.0
+ height: 5.0
+ resolution: 0.03
+
+ # Rate parameters
+ # - - - - - - - - - - - - - -
+ update_frequency: 10.0
+ publish_frequency: 1
+ # mapa local dinamico => Al menos 5[Hz] para reaccionar adecuadamente a obstaculos
+ # publish_frequency alta empeorara la red!!,.. solo usirve para visualizar
+
+
+ # Inflation Layer
+ # = = = = = = = = = = = = = = = = = = 
+ # VERY IMPORTANT PARAMETER!: max radius at which inflate point obstacles p in P. 
+ # if a point X is between  p and the robot circunscribed region CR, then the obstacle is inflated as a "possibly collision"
+ # else if X is between the CR and "inflation_radius", then the obstacle is inflated as "definitely not in collision", 
+ # but with a cost decay as function of distance to the inscribed region.
+ # THIS MEANS: set this parameter > radius(CR) to advise the planner not to getting so close to obstacles.
+ # more info on: http://wiki.ros.org/costmap_2d
+ #
+ # There is a matlab script to plot the decay behavior vs. inflation_radius and cost_scaling_factor
+ # > plotCostmapCostDecay(0.4, 0.5, 1.5, [0.5 1 2 5 10])
+ inflation_radius: 0.2 #0.7
+ cost_scaling_factor: 3
+
+ # footprint considerations:
+ # - measured to match the real footprint (very tight)
+ # - has extra windows to account for laser's minimum detection range.
+ # - laser_front: position=( 0.26,0), min_range=0.05[m] (wr to the sensor center)
+ # - laser_rear:  position=(-0.22,0), min_range=0.08[m] (wr to the sensor center)
+ footprint: [[-0.235,-0.23],[-0.30,-0.04],[-0.30,0.04],[-0.235,0.23],[-0.14,0.34],[0.03,0.34],[0.235,0.23],[0.31,0.03],[0.31,-0.03],[0.235,-0.23],[0.03,-0.34],[-0.14,-0.34]]
+ footprint_padding: 0.01
