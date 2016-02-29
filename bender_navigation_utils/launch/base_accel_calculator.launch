@@ -1,0 +1,9 @@
+<launch>
+
+	<!-- accel_calculator -->
+	<node pkg="bender_navigation_utils" type="TwistAccelCalculator.py" name="accel_calculator" output="screen" ns="/bender/nav/" required="true"/>
+
+	<!-- plot -->
+	<node pkg="rqt_plot" type="rqt_plot" name="rqt_plot" output="screen" required="true" args="/bender/nav/accel_calculator/accels/linear/x /bender/nav/accel_calculator/accels/angular/z /bender/nav/accel_calculator/vels/linear/x   /bender/nav/accel_calculator/vels/angular/z"/>
+
+</launch>

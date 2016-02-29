@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>bender_navigation</name>
+  <version>0.0.0</version>
+  <description>The bender_navigation package</description>  
+  <maintainer email="bender.admin@gmail.com">Bender Admin</maintainer>
+  <author email="matias.pavez.b@gmail.com">Matias Pavez</author>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <!--   <run_depend>message_runtime</run_depend> -->
+  <export>
+    <metapackage/>
+  </export>
+
+</package>
