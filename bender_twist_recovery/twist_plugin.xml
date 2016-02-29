@@ -1,0 +1,7 @@
+<library path="lib/libbender_twist_recovery">
+  <class name="bender_twist_recovery/TwistRecovery" type="bender_twist_recovery::TwistRecovery" base_class_type="nav_core::RecoveryBehavior">
+    <description>
+      A recovery behavior that performs a particular twist 
+    </description>
+  </class>
+</library>

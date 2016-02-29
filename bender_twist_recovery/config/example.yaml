@@ -1,0 +1,9 @@
+linear_x: 0.35
+angular_z: 0.20
+duration: 2
+
+linear_speed_limit: 0.35
+angular_speed_limit: 0.35
+linear_acceleration_limit: 0.3
+angular_acceleration_limit: 1.5
+controller_frequency: 15.0
