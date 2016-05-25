@@ -11,7 +11,7 @@
 	<arg name="sim_world"    default="amtc"/>
 
 	<!-- Hardware -->
-	<include file="$(find bender_bringup)/launch/hardware/hardware.launch">
+	<include file="$(find bender_nav)/launch/hardware.launch">
 		<arg name="simulation" value="$(arg simulation)"/>
 		<arg name="joy_number" value="$(arg joy_number)"/>
 		<arg name="tf_gui"     value="$(arg tf_gui)"/>
@@ -19,9 +19,6 @@
 		<arg name="sim_world"  value="$(arg sim_world)"/>
 	</include>
 	
-	<!-- cmd_vel_mux -->
-	<include file="$(find bender_cmd_vel_mux)/launch/mux.launch"/>
-
 	<!-- - - - L o c a l i z a t i o n - - - -->
 	<group if="$(arg slam)">
 		<!-- slam node -->
