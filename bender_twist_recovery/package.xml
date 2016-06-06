@@ -2,9 +2,31 @@
   <name>bender_twist_recovery</name>
   <version>0.1.11</version>
   <description>bender_twist_recovery</description>
-  <maintainer email="matias.pavez.b@gmail.com">Matias Pavez</maintainer>
+
+
+  <!-- original -->
   <author>Bhaskara Marthi</author>
-  <license>BSD</license>
+  
+  <!-- team -->
+  <maintainer email="bender.devel@gmail.com">
+    Bender Team - UChile Homebreakers</maintainer>
+  <author     email="bender.devel@gmail.com">
+    Bender Team - UChile Homebreakers</author>
+
+  <!-- specific developers -->
+  <maintainer email="matias.pavez.b@gmail.com">Matias Pavez</maintainer>
+  <author>Matías Pavez</author>
+
+  <!-- about bender and related repository -->
+  <url type="website">bender.li2.uchile.cl</url>
+  <url type="bugtracker">
+    https://bitbucket.org/uchile-robotics-die/bender_navigation/issues</url>
+  <url type="repository">
+    https://bitbucket.org/uchile-robotics-die/bender_navigation</url>
+
+  <license>TODO</license>
+
+
 
   <buildtool_depend>catkin</buildtool_depend>
 

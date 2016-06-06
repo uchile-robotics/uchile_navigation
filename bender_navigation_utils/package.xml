@@ -3,9 +3,28 @@
 	<name>bender_navigation_utils</name>
 	<version>1.0.0</version>
 	<description>bender_navigation_utils</description>
+
+	<!-- team -->
+	<maintainer email="bender.devel@gmail.com">
+	  Bender Team - UChile Homebreakers</maintainer>
+	<author     email="bender.devel@gmail.com">
+	  Bender Team - UChile Homebreakers</author>
+
+	<!-- specific developers -->
 	<maintainer email="matias.pavez.b@gmail.com">Matias Pavez</maintainer>
-	<author>Matias Pavez</author>
+	<author>Matías Pavez</author>
+
 	<license>TODO</license>
+
+
+	<!-- about bender and related repository -->
+	<url type="website">bender.li2.uchile.cl</url>
+	<url type="bugtracker">
+	  https://bitbucket.org/uchile-robotics-die/bender_navigation/issues</url>
+	<url type="repository">
+	  https://bitbucket.org/uchile-robotics-die/bender_navigation</url>
+
+
 	<buildtool_depend>catkin</buildtool_depend>
 
 	<build_depend>actionlib</build_depend>

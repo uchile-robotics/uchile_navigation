@@ -8,13 +8,29 @@
     allowed topic if no messages are received after a configured timeout. All topics, together with their
     priority and timeout are configured through a YAML file, that can be reload at runtime.
   </description>
+
+  <!-- original -->
   <author>Jorge Santos Simon</author>
   <maintainer email="jihoonl@yujinrobot.com">Jihoon Lee</maintainer>
-  <license>BSD</license>
-  <url type="website">http://ros.org/wiki/yocs_cmd_vel_mux</url>
-  <url type="repository">https://github.com/yujinrobot/yujin_ocs</url>
-  <url type="bugtracker">https://github.com/yujinrobot/yujin_ocs/issues</url>
+  
+  <!-- team -->
+  <maintainer email="bender.devel@gmail.com">
+    Bender Team - UChile Homebreakers</maintainer>
+  <author     email="bender.devel@gmail.com">
+    Bender Team - UChile Homebreakers</author>
 
+  <!-- specific developers -->
+  <maintainer email="matias.pavez.b@gmail.com">Matías Pavez</maintainer>
+  <author>Matías Pavez</author>
+
+  <!-- about bender and related repository -->
+  <url type="website">bender.li2.uchile.cl</url>
+  <url type="bugtracker">
+    https://bitbucket.org/uchile-robotics-die/bender_navigation/issues</url>
+  <url type="repository">
+    https://bitbucket.org/uchile-robotics-die/bender_navigation</url>
+
+  <license>TODO</license>
 
   <buildtool_depend>catkin</buildtool_depend>
 
