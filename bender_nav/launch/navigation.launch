@@ -11,7 +11,7 @@
 	<arg name="sim_world"    default="amtc"/>
 
 	<!-- Hardware -->
-	<include file="$(find bender_nav)/launch/hardware.launch">
+	<include file="$(find bender_core)/launch/hardware.launch">
 		<arg name="simulation" value="$(arg simulation)"/>
 		<arg name="joy_number" value="$(arg joy_number)"/>
 		<arg name="tf_gui"     value="$(arg tf_gui)"/>
