@@ -4,7 +4,6 @@
 	<arg name="rviz"         default="true" />
 	<arg name="simulation"   default="false"/>
 	<arg name="tf_gui"       default="false"/>
-	<arg name="joy_number"   default="0"    />
 	<arg name="slam"         default="false"/>
 	<arg name="model_type"   default="asus"/>
 	<arg name="map_name"     default="map"/>
@@ -13,7 +12,6 @@
 	<!-- Hardware -->
 	<include file="$(find bender_core)/launch/hardware.launch">
 		<arg name="simulation" value="$(arg simulation)"/>
-		<arg name="joy_number" value="$(arg joy_number)"/>
 		<arg name="tf_gui"     value="$(arg tf_gui)"/>
 		<arg name="model_type" value="$(arg model_type)"/>
 		<arg name="sim_world"  value="$(arg sim_world)"/>
