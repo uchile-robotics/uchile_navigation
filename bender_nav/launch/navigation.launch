@@ -10,11 +10,12 @@
 	<arg name="sim_world"    default="amtc"/>
 
 	<!-- Hardware -->
-	<include file="$(find bender_core)/launch/hardware.launch">
+	<include file="$(find bender_core)/launch/core.launch">
 		<arg name="simulation" value="$(arg simulation)"/>
 		<arg name="tf_gui"     value="$(arg tf_gui)"/>
 		<arg name="model_type" value="$(arg model_type)"/>
 		<arg name="sim_world"  value="$(arg sim_world)"/>
+		<arg name="rviz"       value="$(arg rviz)"/>
 	</include>
 	
 	<!-- - - - L o c a l i z a t i o n - - - -->
@@ -50,12 +51,6 @@
 
 	<!-- - - - T  o  o  l  s - - - -->
 
-	<!-- Pose Server -->
-	<include file="$(find bender_pose_server)/launch/pose_server.launch">
-		<arg name="load_default_map" value="false"     if="$(arg slam)"/>
-		<arg name="load_default_map" value="true"  unless="$(arg slam)"/>
-	</include>
-
 	<!-- non slam specific tools -->
 	<group unless="$(arg slam)">
 
@@ -65,10 +60,6 @@
 		<!-- amcl spreader-->
 		<include file="$(find bender_navigation_utils)/launch/amcl_spreader.launch"/>
 
-		<!-- <node name="Recalculate" pkg="bender_macros" type="RecalculateGoal.py" respawn="true" output="screen" ns="bender/nav"/> -->
 	</group>
-
-	<!-- RVIZ -->
-	<include file="$(find bender_utils)/launch/rviz.launch" if="$(arg rviz)"/>
 
 </launch>
