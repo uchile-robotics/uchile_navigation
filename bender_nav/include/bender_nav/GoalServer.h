@@ -52,7 +52,6 @@ private:
 	ros::ServiceServer _go_to_pose_srv;
 	ros::ServiceServer _look_to_pose_srv;
 	ros::ServiceServer _approach_to_pose_srv;
-	ros::ServiceServer _rotate_in_place_srv;
 	ros::ServiceServer _cancel_goal_srv;
     ros::ServiceServer _has_arrived_srv;
     ros::ServiceServer _get_current_pose_srv;
@@ -82,8 +81,6 @@ public:
 	bool goToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res);
 
 	bool lookToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res);
-
-	bool rotateInPlace(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res);
 
 	bool approachToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res);
 

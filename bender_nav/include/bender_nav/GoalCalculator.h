@@ -78,7 +78,6 @@ public:
 	virtual ~GoalCalculator();
 
 	geometry_msgs::PoseStamped calculeLookGoal(geometry_msgs::PoseStamped current_pose, geometry_msgs::PoseStamped look_pose);
-	geometry_msgs::PoseStamped calculeRotationGoal(geometry_msgs::PoseStamped current_pose, double degrees);
 	geometry_msgs::PoseStamped calculeApproachGoal(geometry_msgs::PoseStamped current_pose, geometry_msgs::PoseStamped approach_pose);
 
 	bool transformPose(geometry_msgs::PoseStamped goal, geometry_msgs::PoseStamped &transformed_pose);

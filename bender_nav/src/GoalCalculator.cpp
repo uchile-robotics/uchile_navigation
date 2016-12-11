@@ -101,24 +101,6 @@ geometry_msgs::PoseStamped GoalCalculator::calculeLookGoal(geometry_msgs::PoseSt
 }
 
 
-geometry_msgs::PoseStamped GoalCalculator::calculeRotationGoal(geometry_msgs::PoseStamped current_pose, double degrees) {
-
-	geometry_msgs::PoseStamped goal;
-
-	float current_theta = 2*asinf(current_pose.pose.orientation.z);
-	float new_theta = current_theta + degrees*M_PI/180.0;
-
-    goal.header.frame_id = _map_frame;
-    goal.header.stamp = ros::Time::now();
-    goal.pose.position = current_pose.pose.position;
-    goal.pose.orientation.x = 0*sin(0.5*new_theta);
-    goal.pose.orientation.y = 0*sin(0.5*new_theta);
-    goal.pose.orientation.z = 1*sin(0.5*new_theta);
-    goal.pose.orientation.w = 1*cos(0.5*new_theta);
-
-    return goal;
-}
-
 geometry_msgs::PoseStamped GoalCalculator::calculeApproachGoal(geometry_msgs::PoseStamped current_pose, geometry_msgs::PoseStamped approach_pose) {
 
     std::vector<geometry_msgs::Point> point_vector;

@@ -38,7 +38,6 @@ GoalServer::GoalServer(std::string name): server_name(name) {
 	_go_to_pose_srv = priv.advertiseService("go", &GoalServer::goToPose,this);
 	_look_to_pose_srv  = priv.advertiseService("look", &GoalServer::lookToPose,this);
 	_approach_to_pose_srv = priv.advertiseService("approach", &GoalServer::approachToPose,this);
-	_rotate_in_place_srv = priv.advertiseService("rotate",&GoalServer::rotateInPlace,this);
 	_cancel_goal_srv = priv.advertiseService("cancel", &GoalServer::cancelGoal,this);
     _has_arrived_srv = priv.advertiseService("has_arrived", &GoalServer::hasArrived,this);
     _get_current_pose_srv = priv.advertiseService("get_current_pose", &GoalServer::getCurrentPose,this);
@@ -101,14 +100,6 @@ bool GoalServer::lookToPose(bender_srvs::NavGoal::Request &req, bender_srvs::Nav
 		return false;
 	}
 	goal = _goal_calculator->calculeLookGoal(_goal_handler->getCurrentPose(),transformed_goal);
-
-	return _server_state->setGoal(goal);
-}
-
-bool GoalServer::rotateInPlace(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res) {
-
-	geometry_msgs::PoseStamped goal;
-	goal = _goal_calculator->calculeRotationGoal(_goal_handler->getCurrentPose(),req.rotation);
 
 	return _server_state->setGoal(goal);
 }
