@@ -31,8 +31,8 @@ TrajectoryPlannerROS:
  # Goal Tolerance Parameters
  # - - - - - - - - - - - - - - -
  # small values, because we expect that the goal server will check for this
- yaw_goal_tolerance: 0.17 # 10 deg
- xy_goal_tolerance:  0.15 # 15 cm
+ yaw_goal_tolerance: 0.30 # 17 deg
+ xy_goal_tolerance:  0.30 # 30 cm
  latch_xy_goal_tolerance: true # el goal server funciona latcheado... primero XY y luego theta.
 
 
