@@ -1,7 +1,17 @@
 #!/bin/bash
+#
+# Run me like this
+# > bash install.sh
+#
+# DO NOT USE ONE OF THIS:
+# > source install.sh
+# > . install.sh
+# > ./install.sh
+#
 
 # - - - - - - S E T U P - - - - - - - -
 # # # # # # # # # # # # # # # # # # # #
+source "$BENDER_SYSTEM"/setup.bash
 
 # Useful Variables
 installer="[INSTALLER]:"
@@ -12,7 +22,7 @@ installer="[INSTALLER]:"
 # - - - - - - - Install dependencies - - - - - - - -
 echo -e "\n$installer Installing bender_nav dependencies . . .\n"
 
-bender_cd  bender_sensors
+bender_cd bender_sensors
 bash install/install.sh
 
 
