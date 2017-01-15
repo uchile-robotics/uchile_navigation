@@ -11,7 +11,7 @@
 
 # - - - - - - S E T U P - - - - - - - -
 # # # # # # # # # # # # # # # # # # # #
-source "$BENDER_SYSTEM"/setup.bash
+source "$BENDER_WS"/bender_system/install/pkg_install.bash
 
 # Useful Variables
 installer="[INSTALLER]:"
