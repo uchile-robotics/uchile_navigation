@@ -7,7 +7,7 @@
 	</node>
 
 	<!-- laser_front relay -->
-	<node pkg="topic_tools" type="relay" name="amcl_scan_front_relay" ns="/bender/nav/" args="/bender/sensors/laser_front/scan /bender/nav/amcl/scan"/>
+	<node pkg="topic_tools" type="relay" name="amcl_scan_front_relay" ns="/bender/nav/" args="/bender/sensors/laser_front/scan_filtered /bender/nav/amcl/scan"/>
 
 	<!-- laser_rear relay -->
 	<node pkg="topic_tools" type="relay" name="amcl_scan_rear_relay" ns="/bender/nav/" args="/bender/sensors/laser_rear/scan /bender/nav/amcl/scan"/>

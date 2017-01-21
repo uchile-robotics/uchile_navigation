@@ -18,7 +18,7 @@
 		-->
 
 		<!-- Remappings-->
-		<remap from="scan" to="/bender/sensors/laser_front/scan"/>
+		<remap from="scan" to="/bender/sensors/laser_front/scan_filtered"/>
 		<remap from="map" to="/map"/>
 		<remap from="map_metadata" to="/map_metadata"/>
 		

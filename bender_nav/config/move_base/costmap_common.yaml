@@ -42,7 +42,7 @@
  laser_front_sensor: {
   sensor_frame: /bender/sensors/laser_front_link,
   data_type: LaserScan,
-  topic: /bender/sensors/laser_front/scan,
+  topic: /bender/sensors/laser_front/scan_filtered,
   marking: true,
   clearing: true,
   expected_update_rate: 0.1,
