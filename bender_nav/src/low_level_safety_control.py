@@ -18,15 +18,16 @@ class CmdVelSafety(object):
         self.laser_front_param = rospy.get_param("bender_sensors_laser_front_link",
                                                  "/bender/sensors/laser_front_link")
         self.laser_rear_param = rospy.get_param("bender_sensors_laser_rear_link",
-            "/bender/sensors/laser_rear_link")
+                                                "/bender/sensors/laser_rear_link")
         self.bender_base_frame = rospy.get_param("base_link", "/bender/base_link")
         self.listener = tf.TransformListener()
 
         # ros interface
         self.pub = rospy.Publisher('/bender/nav/safety/low_level/cmd_vel', Twist, queue_size=5)
-        self.laser_sub = rospy.Subscriber('/bender/sensors/laser_front/scan', LaserScan, self.laser_front_input_cb)
+        self.laser_front_sub = rospy.Subscriber('/bender/sensors/laser_front/scan', LaserScan, self.laser_front_input_cb)
+        self.laser_rear_sub = rospy.Subscriber('/bender/sensors/laser_rear/scan', LaserScan, self.laser_front_input_cb)
         self.odom_sub = rospy.Subscriber('/bender/nav/odom', Odometry, self.odom_input_cb)
-        self.vel_sub = rospy.Subscriber('/bender/nav/cmd_vel', Twist, self.vel_output_cb)
+        self.vel_sub = rospy.Subscriber("/bender/nav/low_level_mux/cmd_vel", Twist, self.vel_output_cb)
 
         self.max_rad = .6
         self.front_laser_dist = .25
@@ -63,7 +64,7 @@ class CmdVelSafety(object):
         return dist
 
     def get_correction_factor(self, obj_rotation):
-        vel_factor = 1 + max((self.curr_vel ** 2 / (2 * self.stoping_acc)), (self.sent_vel ** 2 / (2 * self.stoping_acc)))
+        vel_factor = 1 + self.sent_vel ** 2 / (2 * self.stoping_acc)
         ang_factor = 1 - 2 * obj_rotation[2] ** 2
         return vel_factor * ang_factor
 
@@ -85,7 +86,8 @@ class CmdVelSafety(object):
         #rospy.loginfo("Min laser distance: %f m x %f m y (%f m total), at %f rads" % (min_dist * math.cos(min_ang), min_dist * math.sin(min_ang), min_dist, min_ang))
 
     def laser_rear_input_cb(self, msg):
-        min_dist = math.inf
+        min_dist = float("inf")
+        min_ang = math.pi
         with self.msg_lock:
             for i in range(len(msg.ranges)):
                 if msg.range_min <= msg.ranges[i] <= msg.range_max and msg.ranges[i] < min_dist:
@@ -94,10 +96,10 @@ class CmdVelSafety(object):
 
         br = tf.TransformBroadcaster()
         br.sendTransform((min_dist * math.cos(min_ang), min_dist * math.sin(min_ang), 0),
-            tf.transformations.quaternion_from_euler(0, 0, -min_ang),
-            rospy.Time.now(),
-            "/closest_rear_laser_point",
-            self.laser_front_param)
+                         tf.transformations.quaternion_from_euler(0, 0, -min_ang),
+                         rospy.Time.now(),
+                         "/closest_rear_laser_point",
+                         self.laser_rear_param)
         #rospy.loginfo("Min laser distance: %f m at %f rads" % (min_dist, self.min_ang))
         return
 
@@ -109,9 +111,9 @@ class CmdVelSafety(object):
 
     def publish_state(self):
         self.listener.waitForTransform("/closest_front_laser_point",
-            self.bender_base_frame, rospy.Time(), rospy.Duration(1.0))
-        #self.listener.waitForTransform("/closest_rear_laser_point",
-        #    self.bender_base_frame, rospy.Time(), rospy.Duration(1.0))
+            self.bender_base_frame, rospy.Time(), rospy.Duration(2.0))
+        self.listener.waitForTransform("/closest_rear_laser_point",
+            self.bender_base_frame, rospy.Time(), rospy.Duration(2.0))
         
         try:
             while not rospy.is_shutdown():
@@ -123,16 +125,18 @@ class CmdVelSafety(object):
                     (trans_front, rot_front) = self.listener.lookupTransform("/closest_front_laser_point",
                         self.bender_base_frame, rospy.Time())
 
-                    # Closer point in the back
-#                    listener.waitForTransformFull("/closest_rear_laser_point", now,
-#                        self.bender_base_frame, rospy.Duration(1.0))
-#                    (trans_rear, rot_rear) = listener.lookupTransformFull("/closest_rear_laser_point", now,
-#                        self.bender_base_frame)
-#
-#                    closest = min(self._distance(trans_front, [0,0,0]), self._distance(trans_rear, [0,0,0]))
-                    closest = self._distance(trans_front, [0,0,0])
-                    corr_factor = self.get_correction_factor(rot_front)
-                    rospy.loginfo("Closer point at %f m from the center with a %f correction_factor and %f m/s sent velocity" % (closest, corr_factor, self.sent_vel))
+                   #  Closer point in the back
+                    self.listener.waitForTransform("/closest_rear_laser_point",
+                        self.bender_base_frame, rospy.Time(), rospy.Duration(2.0))
+                    (trans_rear, rot_rear) = self.listener.lookupTransform("/closest_rear_laser_point",
+                        self.bender_base_frame, rospy.Time())
+
+                    dist_front = self._distance(trans_front, [0,0,0])
+                    dist_rear = self._distance(trans_rear, [0,0,0])
+                    closest = min(dist_rear, dist_front)
+                    clos_ang = rot_front if dist_front < dist_rear else rot_rear
+                    corr_factor = self.get_correction_factor(clos_ang)
+                    rospy.loginfo("Closer point at %f m from the center with a %f correction_factor" % (closest, corr_factor))
                     if closest <= self.max_rad * abs(corr_factor) and corr_factor * self.sent_vel > 0:
                         rospy.loginfo("Collision detected, stopping movement")
                         self.pub.publish(Twist())
