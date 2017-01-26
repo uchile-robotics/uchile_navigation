@@ -37,7 +37,7 @@ class CmdVelSafety(object):
         laser_pose = self.get_laser_rear_base_transform(0, 0).pose_out
         self.laser_rear_base_dist = self._distance([
                                             laser_pose.pose.position.x,
-                                            laser_pose.pose.position.y, 
+                                            laser_pose.pose.position.y,
                                             laser_pose.pose.position.z], 
                                             [0,0,0])
 
@@ -49,7 +49,7 @@ class CmdVelSafety(object):
         self.vel_sub = rospy.Subscriber("/bender/nav/low_level_mux/cmd_vel", Twist, self.vel_output_cb)
 
         self.max_rad = .6
-        self.laser_range = math.pi / 6
+        self.laser_range = math.pi / 9
         self.front_laser_dist = .25
         self.curr_vel = 0
         self.sent_vel = 0
@@ -57,6 +57,8 @@ class CmdVelSafety(object):
 
         # clock
         self.rate_pub = rospy.Rate(10)
+        self.cnt_front = 0
+        self.cnt_rear = 0
 
         # last message
         self.last_msg = Twist()
@@ -126,52 +128,60 @@ class CmdVelSafety(object):
         return out
 
     def laser_front_input_cb(self, msg):
-        min_dist = float("inf")
-        min_ang = math.pi
-        curr_values = [0, msg.ranges[0], msg.ranges[1]]
-        with self.msg_lock:
-            for i in range(2, len(msg.ranges)):
-                curr_values[0] = curr_values[1]
-                curr_values[1] = curr_values[2]
-                curr_values[2] = msg.ranges[i]
+        if self.cnt_front % 4 == 0:
+            self.cnt_front += 1
+        else:
+            self.cnt_front += 1
+            min_dist = float("inf")
+            min_ang = math.pi
+            curr_values = [0, msg.ranges[0], msg.ranges[1]]
+            with self.msg_lock:
+                for i in range(2, len(msg.ranges)):
+                    curr_values[0] = curr_values[1]
+                    curr_values[1] = curr_values[2]
+                    curr_values[2] = msg.ranges[i]
 
-                curr_mean = numpy.mean(curr_values)
-                #curr_std = numpy.std(curr_values)
+                    curr_mean = numpy.mean(curr_values)
+                    #curr_std = numpy.std(curr_values)
 
-                #if curr_std < curr_mean / 10:
-                if msg.range_min <= curr_mean <= msg.range_max:
-                    curr_ang = msg.angle_min + i * msg.angle_increment
-                    base_ang = math.atan2(math.sin(curr_ang) * curr_mean, self.laser_front_base_dist + math.cos(curr_ang) * curr_mean)
-                    if abs(base_ang) < self.laser_range:
-                        curr_dist = math.sqrt(self.laser_front_base_dist ** 2 + curr_mean ** 2 + 2 * self.laser_front_base_dist * curr_mean * math.cos(curr_ang))
-                        if curr_dist < min_dist:
-                            min_ang = base_ang
-                            min_dist = curr_dist
-            self.laser_front_closest_point = [min_dist, min_ang]
+                    #if curr_std < curr_mean / 10:
+                    if msg.range_min <= curr_mean <= msg.range_max:
+                        curr_ang = msg.angle_min + i * msg.angle_increment
+                        base_ang = math.atan2(math.sin(curr_ang) * curr_mean, self.laser_front_base_dist + math.cos(curr_ang) * curr_mean)
+                        if abs(base_ang) < self.laser_range:
+                            curr_dist = math.sqrt(self.laser_front_base_dist ** 2 + curr_mean ** 2 + 2 * self.laser_front_base_dist * curr_mean * math.cos(curr_ang))
+                            if curr_dist < min_dist:
+                                min_ang = base_ang
+                                min_dist = curr_dist
+                self.laser_front_closest_point = [min_dist, min_ang]
 
     def laser_rear_input_cb(self, msg):
-        min_dist = float("inf")
-        min_ang = math.pi
-        curr_values = [0, msg.ranges[0], msg.ranges[1]]
-        with self.msg_lock:
-            for i in range(2, len(msg.ranges)):
-                curr_values[0] = curr_values[1]
-                curr_values[1] = curr_values[2]
-                curr_values[2] = msg.ranges[i]
+        if self.cnt_rear % 4 == 0:
+            self.cnt_rear += 1
+        else:
+            self.cnt_rear += 1
+            min_dist = float("inf")
+            min_ang = math.pi
+            curr_values = [0, msg.ranges[0], msg.ranges[1]]
+            with self.msg_lock:
+                for i in range(2, len(msg.ranges)):
+                    curr_values[0] = curr_values[1]
+                    curr_values[1] = curr_values[2]
+                    curr_values[2] = msg.ranges[i]
 
-                curr_mean = numpy.mean(curr_values)
-             #   curr_std = numpy.std(curr_values)
+                    curr_mean = numpy.mean(curr_values)
+                 #   curr_std = numpy.std(curr_values)
 
-              #  if curr_std < curr_mean / 10:
-                if msg.range_min <= curr_mean <= msg.range_max:
-                    curr_ang = msg.angle_min + i * msg.angle_increment
-                    base_ang = math.atan2(math.sin(curr_ang) * curr_mean, self.laser_rear_base_dist + math.cos(curr_ang) * curr_mean)
-                    if abs(base_ang) < self.laser_range:
-                        curr_dist = math.sqrt(self.laser_rear_base_dist ** 2 + curr_mean ** 2 + 2 * self.laser_rear_base_dist * curr_mean * math.cos(curr_ang))
-                        if curr_dist < min_dist:
-                            min_ang = base_ang
-                            min_dist = curr_dist
-            self.laser_rear_closest_point = [min_dist, min_ang]
+                  #  if curr_std < curr_mean / 10:
+                    if msg.range_min <= curr_mean <= msg.range_max:
+                        curr_ang = msg.angle_min + i * msg.angle_increment
+                        base_ang = math.atan2(math.sin(curr_ang) * curr_mean, self.laser_rear_base_dist + math.cos(curr_ang) * curr_mean)
+                        if abs(base_ang) < self.laser_range:
+                            curr_dist = math.sqrt(self.laser_rear_base_dist ** 2 + curr_mean ** 2 + 2 * self.laser_rear_base_dist * curr_mean * math.cos(curr_ang))
+                            if curr_dist < min_dist:
+                                min_ang = base_ang
+                                min_dist = curr_dist
+                self.laser_rear_closest_point = [min_dist, min_ang]
 
     def odom_input_cb(self, msg):
         self.curr_vel = abs(msg.twist.twist.linear.x)
