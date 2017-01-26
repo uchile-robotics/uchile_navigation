@@ -44,8 +44,8 @@ class CmdVelSafety(object):
 
         # ros interface
         self.pub = rospy.Publisher('/bender/nav/safety/low_level/cmd_vel', Twist, queue_size=5)
-        self.laser_front_sub = rospy.Subscriber('/bender/sensors/laser_front/scan', LaserScan, self.laser_front_input_cb)
-        self.laser_rear_sub = rospy.Subscriber('/bender/sensors/laser_rear/scan', LaserScan, self.laser_rear_input_cb)
+        self.laser_front_sub = rospy.Subscriber('/bender/sensors/laser_front/scan', LaserScan, self.laser_front_input_cb, queue_size = 1)
+        self.laser_rear_sub = rospy.Subscriber('/bender/sensors/laser_rear/scan', LaserScan, self.laser_rear_input_cb, queue_size = 1)
         self.vel_sub = rospy.Subscriber("/bender/nav/low_level_mux/cmd_vel", Twist, self.vel_output_cb)
 
         self.max_rad = .6
