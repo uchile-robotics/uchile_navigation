@@ -33,10 +33,4 @@ local_costmap:
  inflation_radius: 0.2 #0.7
  cost_scaling_factor: 3
 
- # footprint considerations:
- # - measured to match the real footprint (very tight)
- # - has extra windows to account for laser's minimum detection range.
- # - laser_front: position=( 0.26,0), min_range=0.05[m] (wr to the sensor center)
- # - laser_rear:  position=(-0.22,0), min_range=0.08[m] (wr to the sensor center)
- footprint: [[-0.235,-0.23],[-0.30,-0.04],[-0.30,0.04],[-0.235,0.23],[-0.14,0.34],[0.03,0.34],[0.235,0.23],[0.31,0.03],[0.31,-0.03],[0.235,-0.23],[0.03,-0.34],[-0.14,-0.34]]
- footprint_padding: 0.01
+ footprint_topic: /bender/nav/footprint
