@@ -51,12 +51,6 @@ class CmdVelSafety(object):
                                                 0], 
                                                 [0,0,0])
 
-        # ros interface
-        self.pub = rospy.Publisher('/bender/nav/safety/low_level/cmd_vel', Twist, queue_size=2)
-        self.scan_sub = rospy.Subscriber('/bender/sensors/rgbd_head/scan', LaserScan, self.scan_input_cb, queue_size = 1)
-        self.laser_front_sub = rospy.Subscriber('/bender/sensors/laser_front/scan', LaserScan, self.laser_front_input_cb, queue_size = 1)
-        self.laser_rear_sub = rospy.Subscriber('/bender/sensors/laser_rear/scan', LaserScan, self.laser_rear_input_cb, queue_size = 1)
-        self.vel_sub = rospy.Subscriber("/bender/nav/low_level_mux/cmd_vel", Twist, self.vel_output_cb, queue_size = 1)
 
         self.max_rad = .5
         self.laser_range = pi / 9
@@ -72,6 +66,13 @@ class CmdVelSafety(object):
         self.scan_cb_rate = rospy.Rate(5)
         self.cnt_front = 0
         self.cnt_rear = 0
+
+        # ros interface
+        self.pub = rospy.Publisher('/bender/nav/safety/low_level/cmd_vel', Twist, queue_size=2)
+        self.scan_sub = rospy.Subscriber('/bender/sensors/rgbd_head/scan', LaserScan, self.scan_input_cb, queue_size = 1)
+        self.laser_front_sub = rospy.Subscriber('/bender/sensors/laser_front/scan', LaserScan, self.laser_front_input_cb, queue_size = 1)
+        self.laser_rear_sub = rospy.Subscriber('/bender/sensors/laser_rear/scan', LaserScan, self.laser_rear_input_cb, queue_size = 1)
+        self.vel_sub = rospy.Subscriber("/bender/nav/low_level_mux/cmd_vel", Twist, self.vel_output_cb, queue_size = 1)
 
         # last message
         self.last_msg = Twist()
@@ -105,7 +106,7 @@ class CmdVelSafety(object):
                                             0],
                                             [0,0,0])
 
-                #rospy.loginfo("dist front %f m, dist rear %f m, dist scan %f m" % (dist_front, dist_rear, dist_scan))
+                rospy.loginfo("dist front %f m, dist rear %f m, dist scan %f m" % (dist_front, dist_rear, dist_scan))
                 closest = min(dist_rear, min(dist_front, dist_scan))
                 if dist_front < dist_rear and dist_front < dist_scan:
                     clos_ang = rot_front
@@ -114,7 +115,7 @@ class CmdVelSafety(object):
                 else:
                     clos_ang = rot_scan
                 corr_factor = self.get_correction_factor(clos_ang)
-                rospy.loginfo("Closer point at %f m from the center with a %f correction_factor" % (closest, corr_factor))
+                #rospy.loginfo("Closer point at %f m from the center with a %f correction_factor" % (closest, corr_factor))
                 if closest <= self.max_rad * abs(corr_factor) and corr_factor * self.sent_vel > 0:
                     rospy.loginfo("Collision detected, stopping movement")
                     self.pub.publish(Twist())
