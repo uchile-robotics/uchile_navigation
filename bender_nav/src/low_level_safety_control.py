@@ -42,9 +42,7 @@ class CmdVelSafety(object):
                                                     laser_pose.pose.position.z], 
                                                     [0,0,0])
 
-
-
-        self.max_rad = .6
+        self.max_rad = .55
         self.laser_range = pi / 9
         self.front_laser_dist = .25
         self.curr_vel = 0
@@ -119,7 +117,7 @@ class CmdVelSafety(object):
 
     def get_correction_factor(self, obj_rotation):
         vel_factor = mpow(max(self.curr_vel, self.sent_vel), 2) / (2 * self.stoping_acc)
-        ang_factor = 1
+        ang_factor = 1 if cos(obj_rotation) > 0 else -1
         return vel_factor * ang_factor
 
     def get_laser_front_base_transform(self, dist, ang):
