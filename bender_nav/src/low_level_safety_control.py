@@ -9,6 +9,7 @@ roslib.load_manifest("bender_nav")
 
 from threading import Thread, Lock
 from geometry_msgs.msg import Twist, PoseStamped
+from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from bender_srvs.srv import Transformer
 
@@ -42,18 +43,13 @@ class CmdVelSafety(object):
                                                     [0,0,0])
 
 
-        # ros interface
-        self.pub = rospy.Publisher('/bender/nav/safety/low_level/cmd_vel', Twist, queue_size=2)
-        self.laser_front_sub = rospy.Subscriber('/bender/sensors/laser_front/scan', LaserScan, self.laser_front_input_cb, queue_size = 1)
-        self.laser_rear_sub = rospy.Subscriber('/bender/sensors/laser_rear/scan', LaserScan, self.laser_rear_input_cb, queue_size = 1)
-        self.vel_sub = rospy.Subscriber("/bender/nav/low_level_mux/cmd_vel", Twist, self.vel_output_cb, queue_size = 1)
 
         self.max_rad = .6
         self.laser_range = pi / 9
         self.front_laser_dist = .25
         self.curr_vel = 0
         self.sent_vel = 0
-        self.stoping_acc = 0.34
+        self.stoping_acc = 0.3
 
         # clock
         self.rate_pub = rospy.Rate(10)
@@ -61,6 +57,13 @@ class CmdVelSafety(object):
         self.laser_rear_cb_rate = rospy.Rate(5)
         self.cnt_front = 0
         self.cnt_rear = 0
+
+        # ros interface
+        self.pub = rospy.Publisher('/bender/nav/safety/low_level/cmd_vel', Twist, queue_size=2)
+        self.laser_front_sub = rospy.Subscriber('/bender/sensors/laser_front/scan', LaserScan, self.laser_front_input_cb, queue_size = 1)
+        self.laser_rear_sub = rospy.Subscriber('/bender/sensors/laser_rear/scan', LaserScan, self.laser_rear_input_cb, queue_size = 1)
+        self.vel_sub = rospy.Subscriber("/bender/nav/low_level_mux/cmd_vel", Twist, self.vel_output_cb, queue_size = 1)
+        self.odom_sub = rospy.Subscriber("/bender/nav/odom", Odometry, self.odom_input_cb, queue_size = 1)
 
         # last message
         self.last_msg = Twist()
@@ -90,8 +93,8 @@ class CmdVelSafety(object):
                 else:
                     clos_ang = rot_rear
                 corr_factor = self.get_correction_factor(clos_ang)
-                #rospy.loginfo("Closer point at %f m from the center with a %f correction_factor" % (closest, corr_factor))
-                if closest <= self.max_rad * abs(corr_factor) and corr_factor * self.sent_vel > 0:
+                rospy.loginfo("Closer point at %f m from the center with a %f correction_factor" % (closest, corr_factor))
+                if closest <= self.max_rad + abs(corr_factor) and corr_factor * self.sent_vel > 0:
                     rospy.loginfo("Collision detected, stopping movement")
                     self.pub.publish(Twist())
                 self.rate_pub.sleep()
@@ -115,8 +118,8 @@ class CmdVelSafety(object):
         return dist
 
     def get_correction_factor(self, obj_rotation):
-        vel_factor = 1 + mpow(self.sent_vel, 2) / (2 * self.stoping_acc)
-        ang_factor = cos(obj_rotation)
+        vel_factor = mpow(max(self.curr_vel, self.sent_vel), 2) / (2 * self.stoping_acc)
+        ang_factor = 1
         return vel_factor * ang_factor
 
     def get_laser_front_base_transform(self, dist, ang):
