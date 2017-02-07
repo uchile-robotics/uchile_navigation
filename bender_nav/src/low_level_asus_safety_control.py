@@ -276,7 +276,7 @@ class CmdVelSafety(object):
 
 
 def main():
-    rospy.init_node('cmd_vel_low_level_safety', anonymous=True)
+    rospy.init_node('cmd_vel_asus_low_level_safety', anonymous=True)
     safe = CmdVelSafety()
     rospy.spin()
 

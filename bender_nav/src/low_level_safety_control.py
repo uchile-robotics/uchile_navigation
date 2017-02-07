@@ -42,7 +42,7 @@ class CmdVelSafety(object):
                                                     laser_pose.pose.position.z], 
                                                     [0,0,0])
 
-        self.max_rad = .55
+        self.max_rad = .6
         self.laser_range = pi / 9
         self.front_laser_dist = .25
         self.curr_vel = 0
