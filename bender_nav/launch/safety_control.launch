@@ -1,0 +1,12 @@
+<launch>
+
+	<arg name="asus_scan" default="false"/>
+
+	<group if="asus_scan">
+		<include file="$(find bender_perception_utils)/point_filters/pointcloud_to_laserscan/launch/pointcloud_to_laserscan.launch"/>
+
+		<node pkg="bender_nav" type="low_level_asus_safety_control.py" name="low_level_safety_control"/>
+	</group>
+
+	<node unless="asus_scan" pkg="bender_nav" type="low_level_safety_control.py" name="low_level_safety_control"/>
+</launch>
