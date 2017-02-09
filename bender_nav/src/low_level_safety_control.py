@@ -151,7 +151,7 @@ class CmdVelSafety(object):
         Returns:
             float: Correction factor, > 0 if closest point is in the front, < 0 if it's in the back
         """
-        vel_factor = mpow(max(self.curr_vel, self.sent_vel), 2) / (2 * self.stoping_acc)
+        vel_factor = mpow(max(abs(self.curr_vel), abs(self.sent_vel)), 2) / (2 * self.stoping_acc)
         ang_factor = 1 if cos(obj_rotation) > 0 else -1
         return vel_factor * ang_factor
 
