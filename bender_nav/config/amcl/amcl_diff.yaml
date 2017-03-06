@@ -14,8 +14,8 @@
 
 # min/max allowed number of particles.
 # (default: 100, 5000)
-min_particles: 200
-max_particles: 3000
+min_particles: 100
+max_particles: 5000
 
 # max error between the true distribution and the estimated distribution. 
 # (default: 0.01)
@@ -28,11 +28,11 @@ kld_z: 0.99
 
 # Translational movement required before performing a filter update. [m]
 # (default: 0.2 [m])
-update_min_d: 0.03
+update_min_d: 0.05
 
 # Rotational movement required before performing a filter update. [rad]
 # (default: pi/6 [rad])
-update_min_a: 0.025
+update_min_a: 0.17 # 10 deg
 
 # Number of filter updates required before resampling.
 # (default: 2)
@@ -138,24 +138,24 @@ laser_model_type: likelihood_field
 # perpendicular to the observed direction of travel.
 
 
-# Which model to use, either "diff" or "omni". 
-odom_model_type: diff
+# Which model to use, either "diff", "omni", "diff-corrected" or "omni-corrected". . 
+odom_model_type: diff-corrected
 
 # Specifies the expected noise in odometry's rotation estimate from the rotational component of the robot's motion. 
 # (default: 0.2)
-odom_alpha1: 1.0
+odom_alpha1: 0.05
 
 # Specifies the expected noise in odometry's rotation estimate from translational component of the robot's motion. 
 # (default: 0.2)
-odom_alpha2: 1.0
+odom_alpha2: 0.005
 
 # Specifies the expected noise in odometry's translation estimate from the translational component of the robot's motion. 
 # (default: 0.2)
-odom_alpha3: 1.0
+odom_alpha3: 0.005
 
 # Specifies the expected noise in odometry's translation estimate from the rotational component of the robot's motion. 
 # (default: 0.2)
-odom_alpha4: 1.0
+odom_alpha4: 0.1
 
 # Translation-related noise parameter (only used if model is "omni"). 
 # (default: 0.2)
