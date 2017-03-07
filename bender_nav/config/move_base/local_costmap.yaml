@@ -7,14 +7,14 @@ local_costmap:
  # - - - - - - - - - - - - - -
  static_map: false      # local map is dynamic
  rolling_window: true   # (keep the robot in the center of the costmap) we care about obstacles around the robot 
- width: 5.0
- height: 5.0
- resolution: 0.03
+ width: 4.0
+ height: 3.0
+ resolution: 0.05
 
  # Rate parameters
  # - - - - - - - - - - - - - -
- update_frequency: 10.0
- publish_frequency: 1
+ update_frequency: 2.0
+ publish_frequency: 0.0
  # mapa local dinamico => Al menos 5[Hz] para reaccionar adecuadamente a obstaculos
  # publish_frequency alta empeorara la red!!,.. solo usirve para visualizar
 
@@ -30,7 +30,7 @@ local_costmap:
  #
  # There is a matlab script to plot the decay behavior vs. inflation_radius and cost_scaling_factor
  # > plotCostmapCostDecay(0.4, 0.5, 1.5, [0.5 1 2 5 10])
- inflation_radius: 0.2 #0.7
+ inflation_radius: 1.5
  cost_scaling_factor: 3
 
  footprint_topic: /bender/nav/footprint
