@@ -7,14 +7,14 @@ local_costmap:
  # - - - - - - - - - - - - - -
  static_map: false      # local map is dynamic
  rolling_window: true   # (keep the robot in the center of the costmap) we care about obstacles around the robot 
- width: 4.0
- height: 3.0
- resolution: 0.05
+ width: 5
+ height: 5
+ resolution: 0.025
 
  # Rate parameters
  # - - - - - - - - - - - - - -
- update_frequency: 2.0
- publish_frequency: 0.0
+ update_frequency: 5
+ publish_frequency: 1
  # mapa local dinamico => Al menos 5[Hz] para reaccionar adecuadamente a obstaculos
  # publish_frequency alta empeorara la red!!,.. solo usirve para visualizar
 
@@ -33,4 +33,6 @@ local_costmap:
  inflation_radius: 1.5
  cost_scaling_factor: 3
 
- footprint_topic: /bender/nav/footprint
+ footprint: [ [-0.35, -0.35], [-0.35, 0.35],[0.2, 0.35],[0.26,0], [0.2, -0.35] ]
+
+ # footprint_topic: /bender/nav/footprint
