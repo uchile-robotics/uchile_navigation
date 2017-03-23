@@ -13,7 +13,7 @@ NavfnROS:
 
 
  # Specifies whether or not to visualize the potential area computed by navfn via a PointCloud2.
- visualize_potential: false
+ visualize_potential: true
 
  # Default
 

@@ -3,31 +3,31 @@
 
   recovery_behaviors: [
     {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery},
-    {name: twist_left_down,    type: bender_twist_recovery/TwistRecovery},
-    {name: twist_right_down,   type: bender_twist_recovery/TwistRecovery},
-    {name: twist_down_1,       type: bender_twist_recovery/TwistRecovery},
-    {name: twist_right_1,      type: bender_twist_recovery/TwistRecovery},
-    {name: twist_down_2,       type: bender_twist_recovery/TwistRecovery},
-    {name: twist_right_2,      type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_left_down,    type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_right_down,   type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_down_1,       type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_right_1,      type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_down_2,       type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_right_2,      type: bender_twist_recovery/TwistRecovery},
     # {name: twist_down_3,     type: bender_twist_recovery/TwistRecovery},
-    {name: twist_right_up,     type: bender_twist_recovery/TwistRecovery},
-    {name: twist_up_1,         type: bender_twist_recovery/TwistRecovery},
-    {name: twist_left_up,      type: bender_twist_recovery/TwistRecovery},
-    {name: twist_up_2,         type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_right_up,     type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_up_1,         type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_left_up,      type: bender_twist_recovery/TwistRecovery},
+    # {name: twist_up_2,         type: bender_twist_recovery/TwistRecovery},
     # {name: rotate_recovery,    type: rotate_recovery/RotateRecovery},
     {name: aggressive_reset,   type: clear_costmap_recovery/ClearCostmapRecovery}
   ]
-  twist_up_1:   {linear_x:  0.15, angular_z:  0.00, duration: 3}
-  twist_up_2:   {linear_x:  0.15, angular_z:  0.00, duration: 3}
-  twist_down_1:   {linear_x: -0.15, angular_z:  0.00, duration: 4}
-  twist_down_2:   {linear_x: -0.15, angular_z:  0.00, duration: 4}
-  #twist_down_3:   {linear_x: -0.15, angular_z:  0.00, duration: 3}
-  twist_right_1: {linear_x:  0.00, angular_z: -0.20, duration: 3}
-  twist_right_2: {linear_x:  0.00, angular_z: -0.20, duration: 3}
-  twist_left_down:  {linear_x: -0.15, angular_z: -0.25, duration: 3}
-  twist_right_down: {linear_x: -0.15, angular_z:  0.15, duration: 3}
-  twist_left_up:    {linear_x:  0.15, angular_z:  0.15, duration: 3}
-  twist_right_up:   {linear_x:  0.15, angular_z: -0.15, duration: 3}
+  # twist_up_1:   {linear_x:  0.15, angular_z:  0.00, duration: 3}
+  # twist_up_2:   {linear_x:  0.15, angular_z:  0.00, duration: 3}
+  # twist_down_1:   {linear_x: -0.15, angular_z:  0.00, duration: 4}
+  # twist_down_2:   {linear_x: -0.15, angular_z:  0.00, duration: 4}
+  # twist_down_3:   {linear_x: -0.15, angular_z:  0.00, duration: 3}
+  # twist_right_1: {linear_x:  0.00, angular_z: -0.20, duration: 3}
+  # twist_right_2: {linear_x:  0.00, angular_z: -0.20, duration: 3}
+  # twist_left_down:  {linear_x: -0.15, angular_z: -0.25, duration: 3}
+  # twist_right_down: {linear_x: -0.15, angular_z:  0.15, duration: 3}
+  # twist_left_up:    {linear_x:  0.15, angular_z:  0.15, duration: 3}
+  # twist_right_up:   {linear_x:  0.15, angular_z: -0.15, duration: 3}
   # These will be run when move_base fails to find a valid plan in the same order that they are specified.
   # After each behavior completes, move_base will attempt to make a plan.
   # Note: For the default parameters, the aggressive_reset behavior will clear out to a distance of 4 * ~/local_costmap/circumscribed_radius.
@@ -63,7 +63,7 @@
   # How far [m] the robot must move to be considered not to be oscillating. 
   # Moving this far resets the timer counting up to the ~oscillation_timeout
 
-  planner_frequency: 0.2
+  #planner_frequency: 0.2
   # The rate [Hz] at which to run the global planning loop.
   # If the frequency is set to 0.0, the global planner will only run when a new goal is received
   # or the local planner reports that its path is blocked.
