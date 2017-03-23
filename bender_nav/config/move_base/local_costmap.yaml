@@ -14,7 +14,7 @@ local_costmap:
  # Rate parameters
  # - - - - - - - - - - - - - -
  update_frequency: 5
- publish_frequency: 1
+ publish_frequency: 0
  # mapa local dinamico => Al menos 5[Hz] para reaccionar adecuadamente a obstaculos
  # publish_frequency alta empeorara la red!!,.. solo usirve para visualizar
 

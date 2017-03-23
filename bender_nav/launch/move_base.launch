@@ -11,7 +11,7 @@
 	  - "base_local_planner"
 	-->
 	<arg name="global_planner" value="navfn"/>
-	<arg name="local_planner"  value="dwa_local_planner"/>
+	<arg name="local_planner"  value="base_local_planner"/>
 
 	<node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen" ns="/bender/nav/">
 

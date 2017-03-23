@@ -14,8 +14,8 @@ global_costmap:
 
  # Rate parameters
  # - - - - - - - - - - - - - -
- update_frequency: 1
- publish_frequency: 2
+ update_frequency: 2
+ publish_frequency: 0
  # mapa global estatico => alta freq. actualizacion no necesaria
  # publish_frequency alta empeorara la red!!,.. solo sirve para visualizar
 
@@ -33,7 +33,7 @@ global_costmap:
  # > plotCostmapCostDecay(0.4, 0.5, 1.5, [0.5 1 2 5 10])
  inflation_radius: 1.5
  cost_scaling_factor: 3
- robot_radius: 0.34
- # #footprint: [ [-0.35, -0.35], [-0.35, 0.35],[0.2, 0.35],[0.26,0], [0.2, -0.35] ]
+ # robot_radius: 0.32
+ footprint: [ [-0.35, -0.35], [-0.35, 0.35],[0.2, 0.35],[0.26,0], [0.2, -0.35] ]
  # footprint_padding: 0.00
  # footprint_topic: /bender/nav/footprint
