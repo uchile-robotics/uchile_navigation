@@ -102,7 +102,7 @@ class TwistAccelerationPublisher():
         acc_msg.angular.z = self.centered_diff(self.times, self.vels_a)
         self.vels_pub.publish(vel_msg)
         self.accel_pub.publish(acc_msg)
-        print 'vel=' + str(vel_linear) + ', acc=' + str(acc_msg.linear.x)
+        print('vx: %5.2f   ax: %5.2f   va: %5.2f   aa: %5.2f' % (vel_linear, acc_msg.linear.x, vel_angular, acc_msg.angular.z))
 
 
 def main():

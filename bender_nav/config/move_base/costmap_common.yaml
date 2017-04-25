@@ -5,7 +5,7 @@
  # Coordinate frame and tf parameters
  # - - - - - - - - - - - - - - - - - -
  robot_base_frame: /bender/base_link
- transform_tolerance: 0.5
+ transform_tolerance: 0.2
  # global_frame: costmap dependent
 
  # Rate parameters
@@ -35,8 +35,8 @@
  # - - - - - - - - - - - - - - - - - - 
  # hay que tomar en cuenta, que si el rgbd est'a en otro pc, la carga de datos ser'a mucha!!
 
- #observation_sources: "laser_front_sensor laser_rear_sensor"
- observation_sources: "laser_front_sensor laser_rear_sensor rgbd_head_scan_sensor"
+ observation_sources: "laser_front_sensor laser_rear_sensor"
+ #observation_sources: "laser_front_sensor laser_rear_sensor rgbd_head_scan_sensor"
 
  # required to work
  laser_front_sensor: {
@@ -45,9 +45,9 @@
   topic: /bender/sensors/laser_front/scan_filtered,
   marking: true,
   clearing: true,
-  expected_update_rate: 0.1,
-  obstacle_range: 15,
-  raytrace_range: 16,
+  expected_update_rate: 0.1, # [s]  avg: 40hz
+  obstacle_range: 5,
+  raytrace_range: 5.5,
   observation_persistence: 0.2
  }
 
@@ -71,7 +71,7 @@
   topic: /bender/sensors/rgbd_head/depth/scan,
   marking: true,
   clearing: true,
-  #expected_update_rate: 0.1,
+  expected_update_rate: 0.0,
   obstacle_range: 2.9,
   raytrace_range: 3,
   max_obstacle_height: 1,

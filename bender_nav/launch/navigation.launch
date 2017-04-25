@@ -45,7 +45,8 @@
 		<include file="$(find bender_maps)/launch/map_analyzer.launch"/>
 
 		<!-- amcl spreader-->
-		<include file="$(find bender_navigation_utils)/launch/amcl_spreader.launch"/>
+		<!-- DEPRECATED -->
+		<!-- <include file="$(find bender_navigation_utils)/launch/amcl_spreader.launch"/> -->
 
 	</group>
 

@@ -16,13 +16,13 @@ GlobalPlanner:
  allow_unknown: false
 
  # Tolerance on the goal point for the planner.
- default_tolerance: 0.3
+ default_tolerance: 1.0
 
  # Specifies whether or not to visualize the potential area computed by navfn via a PointCloud2.
- visualize_potential: true
+ publish_potential: true
 
  # use dijkstra's (true) or A* (false) algorithm.
- use_dijkstra: true
+ use_dijkstra: false
 
  # If true, use the quadratic approximation of the potential. Otherwise, use a simpler calculation. 
  use_quadratic: true
@@ -35,5 +35,16 @@ GlobalPlanner:
  old_navfn_behavior: true
 
 
+ # plan cost params --> path shape 
+ lethal_cost: 253
+ neutral_cost: 40
+ cost_factor:  0.55 # in [0.01, 5.0]
+ 
 
+ # planner_window_x:
+ # planner_window_y:
+ # publish_scale:
+ # orientation_mode: 1 # in {0, 1, 2, 3}
 
+ # in code, unused: planner_core.cpp, l147
+ # planner_costmap_publish_frequency 
