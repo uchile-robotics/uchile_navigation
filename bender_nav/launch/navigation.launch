@@ -3,12 +3,13 @@
 	<!-- Parametros -->
 	<arg name="slam"         default="false"/>
 	<arg name="map_name"     default="map"/>
+	<arg name="use_rgbd"     default="false"/>
 
 
 	<!-- - - - L o c a l i z a t i o n - - - -->
 	<group if="$(arg slam)">
 		<!-- slam node -->
-		<include file="$(find bender_nav)/launch/localization/gmapping.launch">
+		<include file="$(find bender_nav)/launch/localization/gmapping.launch.xml">
 			<arg name="slam" value="true"/>
 		</include>
 	</group>
@@ -20,18 +21,19 @@
 		</include>
 
 		<!-- amcl -->
-		<include file="$(find bender_nav)/launch/localization/amcl.launch"/>
+		<include file="$(find bender_nav)/launch/localization/amcl.launch.xml"/>
 
 	</group>
 	
 	<!-- - - - - P l a n n i n g  - - - - -->
 	<!-- Move_Base -->
-	<include file="$(find bender_nav)/launch/move_base.launch">
+	<include file="$(find bender_nav)/launch/move_base.launch.xml">
 		<arg name="slam" value="$(arg slam)"/>
+		<arg name="use_rgbd" value="$(arg use_rgbd)"/>
 	</include>
 
 	<!-- Goal Server -->
-	<include file="$(find bender_nav)/launch/goal_server.launch">
+	<include file="$(find bender_nav)/launch/goal_server.launch.xml">
 		<arg name="slam" value="$(arg slam)"/>
 	</include>
 

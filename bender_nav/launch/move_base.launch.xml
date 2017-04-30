@@ -1,5 +1,9 @@
 <launch>
-	<arg name="slam" default="false"/>
+	<!-- slam or mapped navigation: true, false -->
+	<arg name="slam"/>
+
+	<!-- consider depth readings: true, false -->
+	<arg name="use_rgbd"/>
 
 	<!--
 	Select local and global planners.
@@ -24,6 +28,10 @@
 		<rosparam file="$(find bender_nav)/config/move_base/global_costmap.yaml" command="load"/>
 		<rosparam file="$(find bender_nav)/config/move_base/local_costmap.yaml"  command="load"/>
 		
+		<!-- rewrite  observation_sources when use_rgbd is set to true -->
+		<param name="global_costmap/observation_sources" value="laser_front_sensor laser_rear_sensor rgbd_head_scan_sensor" if="$(arg use_rgbd)"/>
+		<param name="local_costmap/observation_sources" value="laser_front_sensor laser_rear_sensor rgbd_head_scan_sensor" if="$(arg use_rgbd)"/>
+
 		<!-- planner parameters -->
 		<rosparam file="$(find bender_nav)/config/move_base/planner/$(arg global_planner).yaml" command="load"/>
 		<rosparam file="$(find bender_nav)/config/move_base/planner/$(arg local_planner).yaml" command="load"/>
