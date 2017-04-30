@@ -16,7 +16,8 @@ goal_topic: "/bender/nav/goal_server/goal"
 obstacles_topic: "/bender/nav/move_base/global_costmap/inflated_obstacles"
 
 # where to publish the initial pose
-initial_pose_topic: "/bender/nav/initialpose"
+input_initial_pose_topic: "/bender/nav/goal_server/initialpose"
+output_initial_pose_topic: "/bender/nav/initialpose"
 
 # where to obtain the map
 map_service: "/static_map"
