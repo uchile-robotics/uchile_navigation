@@ -22,7 +22,8 @@ GoalHandler::GoalHandler(string name):_aux_name(name) {
     bender_utils::ParameterServerWrapper psw;
     psw.getParameter("map_frame",_map_frame,"/map");
     psw.getParameter("pose_topic",_pose_topic,"/bender/nav/amcl_pose");
-    psw.getParameter("initial_pose_topic",_initial_pose_topic,"/bender/nav/initialpose");
+    psw.getParameter("input_initial_pose_topic",_input_initial_pose_topic,"/bender/nav/goal_server/initialpose");
+    psw.getParameter("output_initial_pose_topic",_output_initial_pose_topic,"/bender/nav/initialpose");
     psw.getParameter("base_frame",_base_frame,"/bender/base_link");
     psw.getParameter("tf_buffer_size",_tf_buffer_size,3.0);
     psw.getParameter("goal_spread_x",_goal_sigma_x,0.5);
@@ -31,13 +32,14 @@ GoalHandler::GoalHandler(string name):_aux_name(name) {
 
 
     // - - - - - - - - - - - - - - - -  P U B L I S H E R S - - - - - - - - - - - - - - - -
-	_initial_pose_pub = priv.advertise<geometry_msgs::PoseWithCovarianceStamped>(_initial_pose_topic,1, this);
+	_initial_pose_pub = priv.advertise<geometry_msgs::PoseWithCovarianceStamped>(_output_initial_pose_topic,1, this);
 
     // - - - - - - - - - - - - - - - - S U B S C R I B E R S - - - - - - - - - - - - - - -
 	_tf_listener = boost::shared_ptr<tf::TransformListener>(
 		new tf::TransformListener(ros::Duration(_tf_buffer_size))
 	);
 	_estimated_pose_sub = priv.subscribe(_pose_topic, 1, &GoalHandler::callback_currentPose,this);
+	_initial_pose_sub = priv.subscribe(_input_initial_pose_topic, 1, &GoalHandler::callback_initialPose,this);
 
 
 	// - - - - - - - - - - - - - - S U B S C R I B E R S - - - - - - - - - - - - - -
@@ -62,6 +64,48 @@ void GoalHandler::callback_currentPose(const geometry_msgs::PoseWithCovarianceSt
 
 	_current_pose.header = pose.header;
 	_current_pose.pose = pose.pose.pose;
+}
+
+void GoalHandler::callback_initialPose(const geometry_msgs::PoseWithCovarianceStamped input) {
+
+	// handle frames not starting with '/'. such as the ones from RVIZ
+	std::string target_frame = input.header.frame_id;
+	if (target_frame.at(0) != '/') {
+		target_frame = "/" + target_frame;
+	}
+
+	if (target_frame == _map_frame) {
+		ROS_INFO_STREAM("[" << _aux_name << "]: Sending initial pose from map frame: " << _map_frame);
+		_initial_pose_pub.publish(input);
+
+
+	} else if (target_frame == _base_frame) {
+
+		geometry_msgs::PoseWithCovarianceStamped output;
+		geometry_msgs::PoseStamped tmp_pose, transformed_pose;
+		tmp_pose.header = input.header;
+		tmp_pose.pose = input.pose.pose;
+		try {
+			_tf_listener->waitForTransform(_map_frame, _base_frame, ros::Time::now(), ros::Duration(1.0));
+			_tf_listener->transformPose(_map_frame, tmp_pose, transformed_pose);
+
+		} catch (tf::TransformException & ex) {
+			ROS_ERROR_STREAM("[" << _aux_name << "]: Cannot transform pose because: " << ex.what());			
+			return;
+		}
+
+		// publish pose
+		ROS_INFO_STREAM("[" << _aux_name << "]: Sending initial pose from base frame: " << _base_frame);
+		output.header = input.header;
+		output.header.frame_id = _map_frame;
+		output.pose.covariance = input.pose.covariance;
+		output.pose.pose = transformed_pose.pose;
+		_initial_pose_pub.publish(output);
+
+	} else {
+		ROS_WARN_STREAM("[" << _aux_name << "]: Will not send initial pose for invalid frame '"
+			<< target_frame << "'. Valid frames are '" << _map_frame << "' and '" << _base_frame << "'.");
+	}
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -137,7 +181,7 @@ bool GoalHandler::cancelGoal() {
 
 	} catch (exception& e) {
 
-        ROS_ERROR_STREAM("Attempt to cancel all goals, when there is no one!: " <<  e.what());
+        ROS_WARN_STREAM("Attempt to cancel all goals, when there is no one!: " <<  e.what());
         return false;
 	}
 

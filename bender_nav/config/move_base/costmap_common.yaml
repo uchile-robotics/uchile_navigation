@@ -35,6 +35,7 @@
  # - - - - - - - - - - - - - - - - - - 
  # hay que tomar en cuenta, que si el rgbd est'a en otro pc, la carga de datos ser'a mucha!!
 
+ # this is handled at launchfile level. see move_base.launch.xml
  observation_sources: "laser_front_sensor laser_rear_sensor"
  #observation_sources: "laser_front_sensor laser_rear_sensor rgbd_head_scan_sensor"
 

@@ -46,7 +46,8 @@ private:
 	// - - - - - Parameters - - - - - - -
 	std::string _map_frame;
 	std::string _pose_topic;
-	std::string _initial_pose_topic;
+	std::string _input_initial_pose_topic;
+	std::string _output_initial_pose_topic;
 	std::string _base_frame;
 	double _tf_buffer_size; // seconds
 	float _goal_sigma_x;
@@ -59,6 +60,7 @@ private:
 	// Listeners
 	boost::shared_ptr<tf::TransformListener> _tf_listener;
 	ros::Subscriber _estimated_pose_sub;
+	ros::Subscriber _initial_pose_sub;
 
 	// Clients
 	boost::shared_ptr<MoveBaseClient> _mbc;
@@ -78,6 +80,7 @@ public:
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// - - - - - - - S u b s c r i b e r   C a l l b a c k s  -  - - - - - - - - - -
 	void callback_currentPose(const geometry_msgs::PoseWithCovarianceStamped pose);
+	void callback_initialPose(const geometry_msgs::PoseWithCovarianceStamped pose);
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// - - - - - -  G o a l   H a n d l i n g   M e t h o d s  - - - - - - - - - - -
