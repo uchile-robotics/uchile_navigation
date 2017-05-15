@@ -1,0 +1,69 @@
+
+/bender/nav/move_base:
+
+  recovery_behaviors: [
+    {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery},
+    {name: twist_left_down,    type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_right_down,   type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_down_1,       type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_right_1,      type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_down_2,       type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_right_2,      type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_down_3,       type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_right_up,     type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_up_1,         type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_left_up,      type: uchile_twist_recovery/TwistRecovery},
+    {name: twist_up_2,         type: uchile_twist_recovery/TwistRecovery},
+    {name: rotate_recovery,    type: rotate_recovery/RotateRecovery},
+    {name: aggressive_reset,   type: clear_costmap_recovery/ClearCostmapRecovery}
+  ]
+  twist_up_1:   {linear_x:  0.15, angular_z:  0.00, duration: 3}
+  twist_up_2:   {linear_x:  0.15, angular_z:  0.00, duration: 3}
+  twist_down_1:   {linear_x: -0.15, angular_z:  0.00, duration: 4}
+  twist_down_2:   {linear_x: -0.15, angular_z:  0.00, duration: 4}
+  twist_down_3:   {linear_x: -0.15, angular_z:  0.00, duration: 3}
+  twist_right_1: {linear_x:  0.00, angular_z: -0.20, duration: 3}
+  twist_right_2: {linear_x:  0.00, angular_z: -0.20, duration: 3}
+  twist_left_down:  {linear_x: -0.15, angular_z: -0.25, duration: 3}
+  twist_right_down: {linear_x: -0.15, angular_z:  0.15, duration: 3}
+  twist_left_up:    {linear_x:  0.15, angular_z:  0.15, duration: 3}
+  twist_right_up:   {linear_x:  0.15, angular_z: -0.15, duration: 3}
+  # These will be run when move_base fails to find a valid plan in the same order that they are specified.
+  # After each behavior completes, move_base will attempt to make a plan.
+  # Note: For the default parameters, the aggressive_reset behavior will clear out to a distance of 4 * ~/local_costmap/circumscribed_radius.
+
+  controller_frequency: 15.0
+  # controller_frequency: 20.0
+  # The rate in Hz at which to run the control loop and send velocity commands to the base.
+
+  planner_patience: 5.0
+  # How long the planner will wait in seconds in an attempt to find a valid plan before space-clearing operations are performed. 
+
+  controller_patience: 5.0
+  # How long the controller will wait in seconds without receiving a valid control before space-clearing operations are performed. 
+
+  conservative_reset_dist: 4.0
+  # Distance away from the robot in meters at which obstacles will be cleared from the costmap when attempting to clear space in the map.
+  # Note: Solo para recovery_behaviors no customs, solo para el default
+
+  recovery_behavior_enabled: true
+  # Whether or not to enable the move_base recovery behaviors to attempt to clear out space. 
+
+  clearing_rotation_allowed: false
+  # Determines whether or not the robot will attempt an in-place rotation when attempting to clear out space.
+  # Note: Solo para recovery_behaviors no customs, solo para el default
+
+  shutdown_costmaps: false
+  # Determines whether or not to shutdown the costmaps of the node when move_base is in an inactive state 
+
+  oscillation_timeout: 5
+  # How long in seconds to allow for oscillation before executing recovery behaviors. A value of 0.0 corresponds to an infinite timeout.
+
+  oscillation_distance: 0.5
+  # How far [m] the robot must move to be considered not to be oscillating. 
+  # Moving this far resets the timer counting up to the ~oscillation_timeout
+
+  #planner_frequency: 0.2
+  # The rate [Hz] at which to run the global planning loop.
+  # If the frequency is set to 0.0, the global planner will only run when a new goal is received
+  # or the local planner reports that its path is blocked.

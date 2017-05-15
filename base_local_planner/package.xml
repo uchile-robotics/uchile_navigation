@@ -25,11 +25,11 @@
     <author>Matías Pavez</author>
 
     <!-- about bender and related repository -->
-    <url type="website">bender.li2.uchile.cl</url>
+    <url type="website">http://robotica-uchile.amtc.cl/</url>
     <url type="bugtracker">
-      https://bitbucket.org/uchile-robotics-die/bender_navigation/issues</url>
+      https://github.com/uchile-robotics/uchile_navigation/issues</url>
     <url type="repository">
-      https://bitbucket.org/uchile-robotics-die/bender_navigation</url>
+      https://github.com/uchile-robotics/uchile_navigation</url>
 
 
     <license>TODO</license>

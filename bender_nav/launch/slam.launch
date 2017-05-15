@@ -1,7 +1,0 @@
-<launch>
-
-	<include file="$(find bender_nav)/launch/navigation.launch">
-		<arg name="slam" value="true"/>
-	</include>
-
-</launch>

@@ -1,0 +1,18 @@
+<launch deprecated="Plan remaker node is DEPRECATED!, please use the native replanning tool for move_base, by setting 'planner_frequency' > 0. This launchfile is kept for instructional purposes only ">
+
+	<!-- plan remaker -->
+	<!-- este nodo es MUY importante cuando se desea hacer slam ... en caso de querer desactivarlo,
+	sólo hacerlo cuando "slam"="false" -->
+	<node pkg="uchile_navigation_utils" type="plan_remaker" name="plan_remaker" respawn="true" output="screen" ns="/bender/nav/">
+		
+		<!-- remap params -->
+		<remap from="plan_remaker/plan_tolerance" to="/bender/nav/move_base/TrajectoryPlannerROS/xy_goal_tolerance"/>
+
+		<!-- remap topics -->
+		<remap from="plan_remaker/new_goal"    to="/bender/nav/move_base/current_goal"/>
+
+		<!-- remap services -->
+		<remap from="plan_remaker/make_plan"   to="/bender/nav/move_base/NavfnROS/make_plan"/>
+		<remap from="plan_remaker/has_arrived" to="/bender/nav/goal_server/has_arrived"/>
+	</node>
+</launch>

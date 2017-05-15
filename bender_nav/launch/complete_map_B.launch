@@ -1,8 +1,0 @@
-<launch>
-
-	<!-- Mapping -->
-	<include file="$(find bender_nav)/launch/localization/gmapping.launch">
-		<arg name="slam" value="true"/>
-	</include> 
-
-</launch>

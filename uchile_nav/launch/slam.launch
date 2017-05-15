@@ -1,0 +1,7 @@
+<launch>
+
+	<include file="$(find uchile_nav)/launch/navigation.launch">
+		<arg name="slam" value="true"/>
+	</include>
+
+</launch>
