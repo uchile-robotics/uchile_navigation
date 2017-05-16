@@ -47,7 +47,7 @@
     <depend>std_srvs</depend>
 
     <!-- bender -->
-    <depend>bender_cmd_vel_mux</depend>
+    <depend>uchile_cmd_vel_mux</depend>
     <depend>uchile_msgs</depend>
     <depend>uchile_srvs</depend>
     <depend>uchile_tf</depend>

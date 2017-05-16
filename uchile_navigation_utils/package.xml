@@ -28,7 +28,7 @@
 	<buildtool_depend>catkin</buildtool_depend>
 
 	<build_depend>actionlib</build_depend>
-	<build_depend>bender_cmd_vel_mux</build_depend>
+	<build_depend>uchile_cmd_vel_mux</build_depend>
 	<build_depend>uchile_msgs</build_depend>
 	<build_depend>uchile_srvs</build_depend>
 	<build_depend>uchile_tf</build_depend>
@@ -49,7 +49,7 @@
 
 	<run_depend>bender_utils</run_depend>
 	<run_depend>actionlib</run_depend>
-	<run_depend>bender_cmd_vel_mux</run_depend>
+	<run_depend>uchile_cmd_vel_mux</run_depend>
 	<run_depend>bender_joy</run_depend>
 	<run_depend>uchile_msgs</run_depend>
 	<run_depend>bender_sensors</run_depend>
