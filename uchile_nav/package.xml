@@ -50,7 +50,7 @@
     <depend>bender_cmd_vel_mux</depend>
     <depend>uchile_msgs</depend>
     <depend>uchile_srvs</depend>
-    <depend>bender_tf</depend>
+    <depend>uchile_tf</depend>
     <depend>bender_utils</depend>
     <depend>bender_joy</depend>
     <depend>bender_sensors</depend>
