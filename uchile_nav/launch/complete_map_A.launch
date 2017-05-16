@@ -6,7 +6,7 @@
 	<arg name="tf_gui"       default="false"/>
 
 	<!-- Hardware -->
-	<include file="$(find bender_core)/launch/core.launch">
+	<include file="$(find bender_bringup)/launch/core.launch">
 		<arg name="simulation" value="$(arg simulation)"/>
 		<arg name="tf_gui"     value="$(arg tf_gui)"/>
 		<arg name="rviz"       value="$(arg rviz)"/>
