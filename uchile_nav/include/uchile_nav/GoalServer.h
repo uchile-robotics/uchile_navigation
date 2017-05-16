@@ -28,7 +28,7 @@
 
 // Goal Server auxiliary objects
 #include "GoalCalculator.h"
-#include <bender_utils/ParameterServerWrapper.h>
+#include <uchile_util/ParameterServerWrapper.h>
 
 namespace uchile_nav {
 

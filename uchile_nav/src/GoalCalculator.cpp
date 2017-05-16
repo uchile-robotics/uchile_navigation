@@ -17,7 +17,7 @@ GoalCalculator::GoalCalculator(string name):_name(name) {
     ros::NodeHandle priv("~");
 
     // - - - - - -  P A R A M E T E R   S E R V E R - - - - - - - - - - - -
-    bender_utils::ParameterServerWrapper psw;
+    uchile_util::ParameterServerWrapper psw;
     psw.getParameter("map_frame",_map_frame,"/map");
     psw.getParameter("obstacles_topic",_obstacles_topic, "/bender/nav/move_base/global_costmap/inflated_obstacles");
     psw.getParameter("is_map_static",_is_map_static,true);

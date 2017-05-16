@@ -19,7 +19,7 @@ GoalHandler::GoalHandler(string name):_aux_name(name) {
     _is_goal_done = false;
 
     // - - - - - P A R A M E T E R   S E R V E R - - - - - - - - - - - -
-    bender_utils::ParameterServerWrapper psw;
+    uchile_util::ParameterServerWrapper psw;
     psw.getParameter("map_frame",_map_frame,"/map");
     psw.getParameter("pose_topic",_pose_topic,"/bender/nav/amcl_pose");
     psw.getParameter("input_initial_pose_topic",_input_initial_pose_topic,"/bender/nav/goal_server/initialpose");

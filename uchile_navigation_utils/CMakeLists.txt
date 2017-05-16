@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   std_srvs
   tf
-  bender_utils
+  uchile_util
   pcl_ros
   pcl_conversions
 )
@@ -30,7 +30,7 @@ find_package(PCL 1.7 REQUIRED COMPONENTS common)
 catkin_package(
   #INCLUDE_DIRS include
   LIBRARIES uchile_nav
-  CATKIN_DEPENDS actionlib uchile_msgs uchile_srvs geometry_msgs move_base_msgs nav_msgs roscpp roslib rospy sensor_msgs std_msgs std_srvs tf bender_utils pcl_ros
+  CATKIN_DEPENDS actionlib uchile_msgs uchile_srvs geometry_msgs move_base_msgs nav_msgs roscpp roslib rospy sensor_msgs std_msgs std_srvs tf uchile_util pcl_ros
   DEPENDS pcl
 )
 
@@ -41,7 +41,7 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${yaml-cpp_INCLUDE_DIRS}
-  ${bender_utils_INCLUDE_DIRS}
+  ${uchile_util_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
 )
 

@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 2.8.3)
 project(uchile_twist_recovery)
 
 # Find ROS dependencies
-set(THIS_PACKAGE_ROS_DEPS nav_core costmap_2d geometry_msgs pluginlib base_local_planner bender_utils)
+set(THIS_PACKAGE_ROS_DEPS nav_core costmap_2d geometry_msgs pluginlib base_local_planner uchile_util)
 find_package(catkin REQUIRED COMPONENTS ${THIS_PACKAGE_ROS_DEPS})
 
 include_directories(
 	include
 	${catkin_INCLUDE_DIRS}
-	${bender_utils_INCLUDE_DIRS})
+	${uchile_util_INCLUDE_DIRS})
 
 catkin_package(
   INCLUDE_DIRS include

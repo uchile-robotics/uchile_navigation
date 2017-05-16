@@ -1,7 +1,7 @@
 
 #include "ros/ros.h"
 #include <std_srvs/Empty.h>
-#include <bender_utils/ParameterServerWrapper.h>
+#include <uchile_util/ParameterServerWrapper.h>
 
 int main(int argc, char **argv) {
 
@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
 	ros::NodeHandle priv("~");
 
 	float dt; // [s]
-	bender_utils::ParameterServerWrapper psw;
+	uchile_util::ParameterServerWrapper psw;
 	psw.getParameter("dt", dt, 5);
 
 	ros::ServiceClient clear_client = priv.serviceClient<std_srvs::Empty>("/bender/nav/move_base/clear_costmaps");

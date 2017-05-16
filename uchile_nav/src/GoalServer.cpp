@@ -16,7 +16,7 @@ GoalServer::GoalServer(std::string name): server_name(name) {
     ros::NodeHandle priv("~");
 
     // - - - - - - - P A R A M E T E R   S E R V E R - - - - - - - - -
-    bender_utils::ParameterServerWrapper psw;
+    uchile_util::ParameterServerWrapper psw;
     psw.getParameter("goal_topic",_goal_topic,"goal");
 
 

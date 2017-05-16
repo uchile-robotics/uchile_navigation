@@ -7,7 +7,7 @@
 
 #include "uchile_nav/GoalServerState.h"
 #include "uchile_nav/GoalServer.h"
-#include <bender_utils/ParameterServerWrapper.h>
+#include <uchile_util/ParameterServerWrapper.h>
 
 using namespace uchile_nav;
 
@@ -149,7 +149,7 @@ void QuietState::updateTrackState() {
 
 	name = "WalkingState";
 
-	bender_utils::ParameterServerWrapper psw;
+	uchile_util::ParameterServerWrapper psw;
 	psw.getParameter("goal_almost_reach_radius",_goal_almost_reach_radius,0.3);
 }
 
@@ -231,7 +231,7 @@ void WalkingState::updateTrackState() {
 			boost::shared_ptr<GoalHandler> goalHandler
 		): server(goalServer), handler(goalHandler) {
 
-	bender_utils::ParameterServerWrapper psw;
+	uchile_util::ParameterServerWrapper psw;
     psw.getParameter("map_frame",_map_frame,"/map");
     psw.getParameter("goal_reach_degree_th",_goal_reach_degree_th,20);
 

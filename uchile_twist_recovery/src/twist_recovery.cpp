@@ -58,7 +58,7 @@ void TwistRecovery::initialize (
 	pub_rviz_ = move_base_nh.advertise<visualization_msgs::MarkerArray>("twist_recovery", 1);
 
 	//get some parameters from the parameter server
-	bender_utils::ParameterServerWrapper private_psw("~/" + name);
+	uchile_util::ParameterServerWrapper private_psw("~/" + name);
 	//ros::NodeHandle private_nh("~/" + name);
 	private_psw.getParameter("linear_x", base_frame_twist_.linear.x,0.20);
 	private_psw.getParameter("angular_z", base_frame_twist_.angular.z,0.20);
@@ -70,7 +70,7 @@ void TwistRecovery::initialize (
 		// check trajectory planner ROS existence
 		ROS_WARN_STREAM("Failed to locate Trajectory Planner ROS parameters. Using default ones.");
 	}
-	bender_utils::ParameterServerWrapper blp_psw("~/TrajectoryPlannerROS");
+	uchile_util::ParameterServerWrapper blp_psw("~/TrajectoryPlannerROS");
 	blp_psw.getParameter("max_vel_x", linear_speed_limit_, 0.3);
 	blp_psw.getParameter("max_vel_theta", angular_speed_limit_, 0.4);
 	blp_psw.getParameter("acc_lim_x", linear_acceleration_limit_, 0.3);

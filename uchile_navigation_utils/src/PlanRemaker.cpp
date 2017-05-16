@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "ros/ros.h"
 #include <tf/transform_listener.h>
-#include <bender_utils/ParameterServerWrapper.h>
+#include <uchile_util/ParameterServerWrapper.h>
 
 // ROS services / messages
 #include <nav_msgs/Path.h>
@@ -144,7 +144,7 @@ PlanRemaker::PlanRemaker() {
 	_received_first_goal = false;
 
 	// - - - - - - - P A R A M E T E R   S E R V E R - - - - - - - - -
-	bender_utils::ParameterServerWrapper psw;
+	uchile_util::ParameterServerWrapper psw;
 	psw.getParameter("map_frame",_map_frame, "/map");
 	psw.getParameter("robot_frame",_robot_frame, "/bender/base_link");
 	psw.getParameter("plan_tolerance",_plan_tolerance, 0.1);

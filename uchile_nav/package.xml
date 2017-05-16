@@ -51,7 +51,7 @@
     <depend>uchile_msgs</depend>
     <depend>uchile_srvs</depend>
     <depend>uchile_tf</depend>
-    <depend>bender_utils</depend>
+    <depend>uchile_util</depend>
     <depend>bender_joy</depend>
     <depend>bender_sensors</depend>
 

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "ros/ros.h"
 #include <tf/transform_listener.h>
-#include <bender_utils/ParameterServerWrapper.h>
+#include <uchile_util/ParameterServerWrapper.h>
 
 // ROS services / messages
 #include <geometry_msgs/PoseStamped.h>
@@ -60,7 +60,7 @@ PosePublisher::PosePublisher() {
 	ros::NodeHandle priv("~");
 
 	// - - - - - - - P A R A M E T E R   S E R V E R - - - - - - - - -
-	bender_utils::ParameterServerWrapper psw;
+	uchile_util::ParameterServerWrapper psw;
 	float transform_tolerance = 0.5;
 	psw.getParameter("tf_tolerance",transform_tolerance, transform_tolerance);
 	psw.getParameter("target_frame",_target_frame, "/map");
