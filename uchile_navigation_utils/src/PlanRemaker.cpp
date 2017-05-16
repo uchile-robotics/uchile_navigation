@@ -7,7 +7,7 @@
 // ROS services / messages
 #include <nav_msgs/Path.h>
 #include <nav_msgs/GetPlan.h>
-#include <bender_srvs/NavGoal.h>
+#include <uchile_srvs/NavGoal.h>
 
 
 namespace uchile_nav {
@@ -93,7 +93,7 @@ private:
 			ROS_WARN_STREAM("cannot request navigation state... server unavailable: " << _arrived_client.getService() );
 			return false;
 		}
-		bender_srvs::NavGoal srv;
+		uchile_srvs::NavGoal srv;
 		try {
 			_arrived_client.call(srv);
 		} catch (std::exception &e) {
@@ -158,7 +158,7 @@ PlanRemaker::PlanRemaker() {
 	_get_plan_client = priv.serviceClient<nav_msgs::GetPlan>("make_plan");
 	while ( ros::ok() && !_get_plan_client.waitForExistence(ros::Duration(3.0)) ) ;
 
-	_arrived_client = priv.serviceClient<bender_srvs::NavGoal>("has_arrived");
+	_arrived_client = priv.serviceClient<uchile_srvs::NavGoal>("has_arrived");
 	while ( ros::ok() && !_arrived_client.waitForExistence(ros::Duration(3.0)) ) ;
 
 	// [important!] wait for timer initialization!

@@ -29,8 +29,8 @@
 
 	<build_depend>actionlib</build_depend>
 	<build_depend>bender_cmd_vel_mux</build_depend>
-	<build_depend>bender_msgs</build_depend>
-	<build_depend>bender_srvs</build_depend>
+	<build_depend>uchile_msgs</build_depend>
+	<build_depend>uchile_srvs</build_depend>
 	<build_depend>bender_tf</build_depend>
 	<build_depend>geometry_msgs</build_depend>
 	<build_depend>move_base_msgs</build_depend>
@@ -51,9 +51,9 @@
 	<run_depend>actionlib</run_depend>
 	<run_depend>bender_cmd_vel_mux</run_depend>
 	<run_depend>bender_joy</run_depend>
-	<run_depend>bender_msgs</run_depend>
+	<run_depend>uchile_msgs</run_depend>
 	<run_depend>bender_sensors</run_depend>
-	<run_depend>bender_srvs</run_depend>
+	<run_depend>uchile_srvs</run_depend>
 	<run_depend>bender_tf</run_depend>
 	<run_depend>geometry_msgs</run_depend>
 	<run_depend>move_base_msgs</run_depend>

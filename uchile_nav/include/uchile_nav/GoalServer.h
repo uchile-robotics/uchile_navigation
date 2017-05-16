@@ -16,8 +16,8 @@
 // ROS
 #include <ros/ros.h>
 #include <std_srvs/Empty.h>
-#include <bender_srvs/NavGoal.h>
-#include <bender_srvs/PoseStamped.h>
+#include <uchile_srvs/NavGoal.h>
+#include <uchile_srvs/PoseStamped.h>
 
 // Goal Server States
 #include "GoalServerState.h"
@@ -78,17 +78,17 @@ public:
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// - - - - - - - - - - - - - - - - - - - - -  S e r v i c e s  - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	bool goToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res);
+	bool goToPose(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res);
 
-	bool lookToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res);
+	bool lookToPose(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res);
 
-	bool approachToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res);
+	bool approachToPose(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res);
 
 	bool cancelGoal(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
 
-	bool hasArrived(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res);
+	bool hasArrived(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res);
 
-	bool getCurrentPose(bender_srvs::PoseStamped::Request &req, bender_srvs::PoseStamped::Response &res);
+	bool getCurrentPose(uchile_srvs::PoseStamped::Request &req, uchile_srvs::PoseStamped::Response &res);
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// - - - - - - - S u b s c r i b e r   C a l l b a c k s  -  - - - - - - - - - -

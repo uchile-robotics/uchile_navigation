@@ -3,8 +3,8 @@ project(uchile_navigation_utils)
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib
-  bender_msgs
-  bender_srvs
+  uchile_msgs
+  uchile_srvs
   geometry_msgs
   move_base_msgs
   nav_msgs
@@ -30,7 +30,7 @@ find_package(PCL 1.7 REQUIRED COMPONENTS common)
 catkin_package(
   #INCLUDE_DIRS include
   LIBRARIES uchile_nav
-  CATKIN_DEPENDS actionlib bender_msgs bender_srvs geometry_msgs move_base_msgs nav_msgs roscpp roslib rospy sensor_msgs std_msgs std_srvs tf bender_utils pcl_ros
+  CATKIN_DEPENDS actionlib uchile_msgs uchile_srvs geometry_msgs move_base_msgs nav_msgs roscpp roslib rospy sensor_msgs std_msgs std_srvs tf bender_utils pcl_ros
   DEPENDS pcl
 )
 

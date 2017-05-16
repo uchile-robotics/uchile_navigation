@@ -80,7 +80,7 @@ void GoalServer::setArrivedState(int state) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - - - - - - - - - - - - - - - - - - - - -  S e r v i c e s  - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool GoalServer::goToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res) {
+bool GoalServer::goToPose(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res) {
 
 	geometry_msgs::PoseStamped transformed_goal;
 
@@ -91,7 +91,7 @@ bool GoalServer::goToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGo
 	return _server_state->setGoal(transformed_goal);
 }
 
-bool GoalServer::lookToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res) {
+bool GoalServer::lookToPose(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res) {
 
 	geometry_msgs::PoseStamped transformed_goal;
 	geometry_msgs::PoseStamped goal;
@@ -104,7 +104,7 @@ bool GoalServer::lookToPose(bender_srvs::NavGoal::Request &req, bender_srvs::Nav
 	return _server_state->setGoal(goal);
 }
 
-bool GoalServer::approachToPose(bender_srvs::NavGoal::Request &req, bender_srvs::NavGoal::Response &res) {
+bool GoalServer::approachToPose(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res) {
 
 	geometry_msgs::PoseStamped transformed_goal;
 	geometry_msgs::PoseStamped goal;
@@ -128,13 +128,13 @@ bool GoalServer::cancelGoal(std_srvs::Empty::Request &req, std_srvs::Empty::Resp
 	return _server_state->cancelGoal();
 }
 
-bool GoalServer::hasArrived(bender_srvs::NavGoal::Request  &req, bender_srvs::NavGoal::Response &res){
+bool GoalServer::hasArrived(uchile_srvs::NavGoal::Request  &req, uchile_srvs::NavGoal::Response &res){
 
 	res.state = this->getArrivedState();
     return true;
 }
 
-bool GoalServer::getCurrentPose(bender_srvs::PoseStamped::Request &req, bender_srvs::PoseStamped::Response &res){
+bool GoalServer::getCurrentPose(uchile_srvs::PoseStamped::Request &req, uchile_srvs::PoseStamped::Response &res){
 
 	res.pose_out = _goal_handler->getCurrentPose();
 	return true;

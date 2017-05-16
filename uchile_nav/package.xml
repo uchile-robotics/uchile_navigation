@@ -48,8 +48,8 @@
 
     <!-- bender -->
     <depend>bender_cmd_vel_mux</depend>
-    <depend>bender_msgs</depend>
-    <depend>bender_srvs</depend>
+    <depend>uchile_msgs</depend>
+    <depend>uchile_srvs</depend>
     <depend>bender_tf</depend>
     <depend>bender_utils</depend>
     <depend>bender_joy</depend>
