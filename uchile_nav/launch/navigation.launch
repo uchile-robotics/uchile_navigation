@@ -16,7 +16,7 @@
 	<group unless="$(arg slam)">
 
 		<!-- static map server -->
-		<include file="$(find bender_maps)/launch/map_server.launch">
+		<include file="$(find uchile_maps)/launch/map_server.launch">
 			<arg name="map_name" value="$(arg map_name)"/>
 		</include>
 
@@ -44,7 +44,7 @@
 	<group unless="$(arg slam)">
 
 		<!-- Map analyzer -->
-		<include file="$(find bender_maps)/launch/map_analyzer.launch"/>
+		<include file="$(find uchile_maps)/launch/map_analyzer.launch"/>
 
 		<!-- amcl spreader-->
 		<!-- DEPRECATED -->
