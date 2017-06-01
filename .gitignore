@@ -1,0 +1,6 @@
+
+
+# JetBraints software
+.idea/
+CMakeLists.txt
+cmake-build-debug

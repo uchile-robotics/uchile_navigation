@@ -309,15 +309,15 @@ void AlmostReachState::updateTrackState() {
 	} else {
 
 		// Adjust orientation
-		ROS_INFO("Orientation correction in progress");
+		ROS_INFO("Orientation correction in progress [doing nothing!.. just waiting move_base server]");
 
-		geometry_msgs::PoseStamped goal;
-		goal.header.frame_id = _map_frame;
-		goal.header.stamp = ros::Time::now();
-		goal.pose.orientation = handler->getCurrentGoal().pose.orientation;
-		goal.pose.position = handler->getCurrentPose().pose.position;
-
-		handler->sendGoal(goal);
+//		geometry_msgs::PoseStamped goal;
+//		goal.header.frame_id = _map_frame;
+//		goal.header.stamp = ros::Time::now();
+//		goal.pose.orientation = handler->getCurrentGoal().pose.orientation;
+//		goal.pose.position = handler->getCurrentPose().pose.position;
+//
+//		handler->sendGoal(goal);
 	}
 }
 

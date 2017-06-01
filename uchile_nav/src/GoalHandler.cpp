@@ -166,9 +166,14 @@ bool GoalHandler::sendGoal(geometry_msgs::PoseStamped goal) {
 			boost::bind(&GoalHandler::_goalDoneCb, this, _1, _2),
 			MoveBaseClient::SimpleActiveCallback(),
 			MoveBaseClient::SimpleFeedbackCallback());
-
 	_current_goal = goal;
-	ROS_INFO("[%s]: Sending goal %f, %f",_aux_name.data(),goal.pose.position.x,goal.pose.position.y);
+
+	ROS_INFO("[%s]: Sending goal (x,y)=(%.2f, %.2f), frame: %s",
+			 _aux_name.data(),
+			 goal.pose.position.x,
+			 goal.pose.position.y,
+			 goal.header.frame_id.c_str()
+	);
 
 	return true;
 }
