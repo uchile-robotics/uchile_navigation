@@ -162,7 +162,7 @@ WalkingState::~WalkingState() {
 bool WalkingState::setGoal(geometry_msgs::PoseStamped goal) {
 
 	ROS_INFO_STREAM("[" << name << "] Resetting goal");
-
+	handler->cancelGoal();
 	handler->spreadRobotPose();
 	if (handler->sendGoal(goal)) {
 
@@ -247,8 +247,8 @@ AlmostReachState::~AlmostReachState() {
 bool AlmostReachState::setGoal(geometry_msgs::PoseStamped goal) {
 
 	ROS_INFO_STREAM("[" << name << "] Resetting goal");
+	handler->cancelGoal();
 	handler->spreadRobotPose();
-
 	if (handler->sendGoal(goal)) {
 
 		server->setState(server->getWalkingState());

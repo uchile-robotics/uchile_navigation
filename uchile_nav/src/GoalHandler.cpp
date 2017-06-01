@@ -155,6 +155,9 @@ bool GoalHandler::spreadRobotPose() {
 
 bool GoalHandler::sendGoal(geometry_msgs::PoseStamped goal) {
 
+	// trick to avoid sending a goal which can be cancelled by cancelGoal()
+	ros::Duration(0.15).sleep();
+
 	move_base_msgs::MoveBaseGoal mb_goal;
 
 	mb_goal.target_pose.header.frame_id = _map_frame;
@@ -181,7 +184,9 @@ bool GoalHandler::sendGoal(geometry_msgs::PoseStamped goal) {
 bool GoalHandler::cancelGoal() {
 
 	try {
-		_mbc->cancelAllGoals();
+		// just cancel past goals
+		_mbc->cancelGoalsAtAndBeforeTime(ros::Time::now()- ros::Duration(0.1));
+
 		ROS_INFO("goals cancelled");
 
 	} catch (exception& e) {
