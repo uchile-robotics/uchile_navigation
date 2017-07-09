@@ -56,7 +56,7 @@
  laser_rear_sensor: {
   sensor_frame: /bender/sensors/laser_rear_link,
   data_type: LaserScan,
-  topic: /bender/sensors/laser_rear/scan,
+  topic: /bender/sensors/laser_rear/scan_filtered,
   marking: true,
   clearing: true,
   expected_update_rate: 0.0,
