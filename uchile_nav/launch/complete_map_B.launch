@@ -1,6 +1,0 @@
-<launch>
-	<!-- Mapping -->
-	<include file="$(find uchile_nav)/launch/localization/gmapping.launch.xml">
-		<arg name="slam" value="true"/>
-	</include> 
-</launch>

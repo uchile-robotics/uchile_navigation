@@ -1,5 +1,0 @@
-<launch>
-	<!-- Hardware -->
-	<include file="$(find bender_bringup)/launch/core_green.launch">
-	</include>
-</launch>
