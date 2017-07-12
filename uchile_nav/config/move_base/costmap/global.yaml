@@ -1,0 +1,127 @@
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Global Costmap
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+static_map: true
+
+# Sequence of plugin specifications, one per layer.
+# Each specification is a dictionary with name and type fields.
+# The name is used to define the parameter namespace for the plugin.
+plugins:
+- {name: static_layer, type: 'costmap_2d::StaticLayer'}
+- {name: static_obstacles_layer, type: 'costmap_2d::StaticLayer'}
+- {name: obstacle_layer, type: 'costmap_2d::ObstacleLayer'}
+- {name: inflation_layer, type: 'costmap_2d::InflationLayer'}
+
+
+# Coordinate frame and tf parameters
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+# The global frame for the costmap to operate in.
+# global_frame (string, default: "/map")
+global_frame: /map
+    
+
+# Rate parameters
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+# The frequency in Hz for the map to be updated. 
+# update_frequency (double, default: 5.0)
+update_frequency: 2.0  # global map is static => does not require a high update_frequency
+
+# The frequency in Hz for the map to be publish display information. 
+# publish_frequency (double, default: 0.0)
+publish_frequency: 0.0  # Just for visualization. Uses CPU and network bandwidth.
+
+
+# Map management parameters
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+# Whether or not to use a rolling window version of the costmap. If the 
+# static_map parameter is set to true, this parameter must be set to false. 
+# rolling_window (bool, default: false)
+rolling_window: false
+
+# If true the full costmap is published to "~<name>/grid" every update. If 
+# false only the part of the costmap that has changed is published on the 
+# "~<name>/grid_updates" topic. 
+# always_send_full_costmap (bool, default: false)
+always_send_full_costmap: false
+    
+# The following parameters can be overwritten by some layers, namely the 
+# static map layer:
+#
+# - The width of the map in meters.           (int, default: 10)
+# - The height of the map in meters.          (int, default: 10)
+# - The resolution of the map in meters/cell. (double, default: 0.05)
+# - The x origin of the map in the global frame in meters. (double, default: 0.0)
+# - The y origin of the map in the global frame in meters. (double, default: 0.0)
+#
+# width: 10      # overwritted by the static layer costmap_2d plugin
+# height: 10     # overwritted by the static layer costmap_2d plugin
+resolution: 0.05
+origin_x: 0.0
+origin_y: 0.0
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Static Layer
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+static_layer:
+
+  # The value for which a cost should be considered unknown when reading in a 
+  # map from the map server. If the costmap is not tracking unknown space, 
+  # costs of this value will be considered occupied. A value of zero also 
+  # results in this parameter being unused. 
+  # unknown_cost_value (int, default: -1)
+  # unknown_cost_value: -1
+
+  # The threshold value at which to consider a cost lethal when reading in a 
+  # map from the map server. 
+  # lethal_cost_threshold (int, default: 100)
+  # lethal_cost_threshold: 100
+
+  # The topic that the costmap subscribes to for the static map. This parameter
+  # is useful when you have multiple costmap instances within a single node 
+  # that you want to use different static maps. - New in navigation 1.3.1 
+  # map_topic (string, default: "map")
+  map_topic: "/map"
+
+  # Only subscribe to the first message on the map topic, ignoring all 
+  # subsequent messages 
+  # first_map_only (bool, default: false)
+  first_map_only: true
+
+  # In addition to map_topic, also subscribe to map_topic + "_updates" 
+  # subscribe_to_updates (bool, default: false)
+  subscribe_to_updates: false
+
+  # If true, unknown values in the map messages are translated directly to the
+  # layer. Otherwise, unknown values in the map message are translated as 
+  # FREE_SPACE in the layer.
+  # track_unknown_space (bool, default: true)
+  track_unknown_space: true
+
+  # Only matters if the static layer is not the bottom layer. If true, only the
+  # maximum value will be written to the master costmap. 
+  # use_maximum (bool, default: false)
+  use_maximum: false
+
+  # If true, translates all map message values to NO_INFORMATION/FREE_SPACE/
+  # LETHAL_OBSTACLE (three values). If false, a full spectrum of intermediate 
+  # values is possible. 
+  # trinary_costmap (bool, default: true)
+  trinary_costmap: true
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Static Obstacles Layer
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+static_obstacles_layer:
+  map_topic: "/bender/knowledge/map/map_obstacles"
+  first_map_only: true
+  subscribe_to_updates: false
+  track_unknown_space: true
+  use_maximum: true
+  trinary_costmap: true
+

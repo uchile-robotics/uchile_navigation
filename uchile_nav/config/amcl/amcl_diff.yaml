@@ -28,11 +28,11 @@ kld_z: 0.99
 
 # Translational movement required before performing a filter update. [m]
 # (default: 0.2 [m])
-update_min_d: 0.05
+update_min_d: 0.01
 
 # Rotational movement required before performing a filter update. [rad]
 # (default: pi/6 [rad])
-update_min_a: 0.17 # 10 deg
+update_min_a: 0.052 # 3 deg
 
 # Number of filter updates required before resampling.
 # (default: 2)
