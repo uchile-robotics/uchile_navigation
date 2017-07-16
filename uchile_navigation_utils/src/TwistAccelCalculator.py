@@ -26,7 +26,7 @@ class TwistAccelerationPublisher():
         self.vels_x = np.array([])
 
         # subscriber
-        self.twist_sub = rospy.Subscriber('/bender/nav/odom', Odometry, self.twist_callback)
+        self.twist_sub = rospy.Subscriber('~odom', Odometry, self.twist_callback)
 
         # publisher
         self.vels_pub = rospy.Publisher('~vels', Twist, queue_size=10)

@@ -1,0 +1,43 @@
+<launch>
+
+    <!-- accel_calculator -->
+    <node
+        pkg="uchile_navigation_utils"
+        type="TwistAccelCalculator.py"
+        name="accel_calculator"
+        output="screen"
+        ns="/maqui/nav/"
+        required="true"
+    >
+        <remap from="accel_calculator/odom" to="/pepper_robot/odom"/>
+    </node>
+
+    <!-- 
+        REMOVE RQT CONFIG.
+        Otherwise, you could not see the graphs properly 
+
+        This assumes the bash call is fast enough to remove the file before rqt starts 
+    -->
+    <node name="rqt_config_cleaner" pkg="uchile_navigation_utils" type="clean_rqt_config.bash"/>    
+
+    <!-- plot vels -->
+    <node
+        name="rqt_plot_vels" 
+        pkg="rqt_plot"
+        type="rqt_plot"
+        output="screen"
+        required="true"
+        args="/maqui/nav/accel_calculator/vels/linear/x /maqui/nav/accel_calculator/vels/angular/z"
+    />
+
+    <!-- plot acels -->
+    <node
+        name="rqt_plot_acels"
+        pkg="rqt_plot"
+        type="rqt_plot"
+        output="screen"
+        required="true"
+        args="/maqui/nav/accel_calculator/accels/linear/x /maqui/nav/accel_calculator/accels/angular/z"
+    />
+
+</launch>
