@@ -3,6 +3,6 @@
 	<!-- Costmap Cleaner DEPRECATED! -->
 	<!-- YA NO SE USA, pues sería problemático al intentar replanear constantemente (con obstáculos que desaparecen!)!
 	-->
-	<!--node pkg="uchile_navigation_utils" type="costmap_cleaner" name="costmap_cleaner" respawn="true" output="screen" ns="/bender/nav/"/-->
+	<node pkg="uchile_navigation_utils" type="costmap_cleaner" name="costmap_cleaner" respawn="true" output="screen" ns="/maqui/nav/"/>
 
 </launch>

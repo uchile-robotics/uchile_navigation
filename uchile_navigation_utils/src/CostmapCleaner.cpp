@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 	uchile_util::ParameterServerWrapper psw;
 	psw.getParameter("dt", dt, 5);
 
-	ros::ServiceClient clear_client = priv.serviceClient<std_srvs::Empty>("/bender/nav/move_base/clear_costmaps");
+	ros::ServiceClient clear_client = priv.serviceClient<std_srvs::Empty>("/maqui/nav/move_base/clear_costmaps");
 	while ( ros::ok() && !clear_client.waitForExistence(ros::Duration(3.0)) ) ;
 
 	ROS_INFO("Ready to clean ...");
