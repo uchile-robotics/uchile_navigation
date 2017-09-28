@@ -30,7 +30,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES uchile_nav
   CATKIN_DEPENDS actionlib uchile_msgs uchile_srvs geometry_msgs move_base_msgs nav_msgs roscpp roslib rospy sensor_msgs std_msgs std_srvs tf uchile_util pcl_ros
-  DEPENDS pcl
+  DEPENDS PCL
 )
 
 ###########
