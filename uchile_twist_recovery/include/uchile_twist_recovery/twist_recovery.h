@@ -10,6 +10,7 @@
 #ifndef TWIST_RECOVERY_TWIST_RECOVERY_H
 #define TWIST_RECOVERY_TWIST_RECOVERY_H
 
+#include <tf/transform_listener.h>
 #include <nav_core/recovery_behavior.h>
 #include <base_local_planner/costmap_model.h>
 #include <costmap_2d/costmap_2d_ros.h>

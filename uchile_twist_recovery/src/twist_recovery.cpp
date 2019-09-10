@@ -10,7 +10,7 @@
 #include <tf/transform_datatypes.h>
 
 // register as a RecoveryBehavior plugin
-PLUGINLIB_DECLARE_CLASS(uchile_twist_recovery, TwistRecovery, uchile_twist_recovery::TwistRecovery, nav_core::RecoveryBehavior)
+PLUGINLIB_EXPORT_CLASS(uchile_twist_recovery::TwistRecovery, nav_core::RecoveryBehavior)
 
 namespace uchile_twist_recovery
 {
