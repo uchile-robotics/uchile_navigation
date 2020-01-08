@@ -1,0 +1,9 @@
+<launch>
+    <node
+        pkg="uchile_navigation_utils"
+        type="costmap_cleaner.py"
+        name="costmap_cleaner"
+        output="screen"
+    />
+
+</launch>

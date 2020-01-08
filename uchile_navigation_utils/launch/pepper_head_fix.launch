@@ -1,0 +1,9 @@
+<launch>
+    <node
+        pkg="uchile_navigation_utils"
+        type="pepper_head_fix.py"
+        name="pepper_head"
+        output="screen"
+    />
+
+</launch>
