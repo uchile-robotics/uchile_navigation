@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_conversions
 )
 
+set(pcl_INCLUDE_DIRS "/home/nao/gentoo/usr/include/pcl-1.8/")
 find_package(PCL 1.7 REQUIRED COMPONENTS common)
 
 
