@@ -67,7 +67,7 @@ void SimpleTrajectoryGenerator::initialise(
   /*
    * We actually generate all velocity sample vectors here, from which to generate trajectories later on
    */
-  double max_vel_th = limits->max_rot_vel;
+  double max_vel_th = limits->max_vel_theta;
   double min_vel_th = -1.0 * max_vel_th;
   discretize_by_time_ = discretize_by_time;
   Eigen::Vector3f acc_lim = limits->getAccLimits();
@@ -190,12 +190,12 @@ bool SimpleTrajectoryGenerator::generateTrajectory(
 
   // make sure that the robot would at least be moving with one of
   // the required minimum velocities for translation and rotation (if set)
-  if ((limits_->min_trans_vel >= 0 && vmag + eps < limits_->min_trans_vel) &&
-      (limits_->min_rot_vel >= 0 && fabs(sample_target_vel[2]) + eps < limits_->min_rot_vel)) {
+  if ((limits_->min_vel_trans >= 0 && vmag + eps < limits_->min_vel_trans) &&
+      (limits_->min_vel_theta >= 0 && fabs(sample_target_vel[2]) + eps < limits_->min_vel_theta)) {
     return false;
   }
   // make sure we do not exceed max diagonal (x+y) translational velocity (if set)
-  if (limits_->max_trans_vel >=0 && vmag - eps > limits_->max_trans_vel) {
+  if (limits_->max_vel_trans >=0 && vmag - eps > limits_->max_vel_trans) {
     return false;
   }
 
@@ -209,6 +209,10 @@ bool SimpleTrajectoryGenerator::generateTrajectory(
     num_steps =
         ceil(std::max(sim_time_distance / sim_granularity_,
             sim_time_angle    / angular_sim_granularity_));
+  }
+
+  if (num_steps == 0) {
+    return false;
   }
 
   //compute a timestep
@@ -247,7 +251,7 @@ bool SimpleTrajectoryGenerator::generateTrajectory(
 
   } // end for simulation steps
 
-  return num_steps > 0; // true if trajectory has at least one point
+  return true; // trajectory has at least one point
 }
 
 Eigen::Vector3f SimpleTrajectoryGenerator::computeNewPositions(const Eigen::Vector3f& pos,
@@ -260,7 +264,7 @@ Eigen::Vector3f SimpleTrajectoryGenerator::computeNewPositions(const Eigen::Vect
 }
 
 /**
- * cheange vel using acceleration limits to converge towards sample_target-vel
+ * change vel using acceleration limits to converge towards sample_target-vel
  */
 Eigen::Vector3f SimpleTrajectoryGenerator::computeNewVelocities(const Eigen::Vector3f& sample_target_vel,
     const Eigen::Vector3f& vel, Eigen::Vector3f acclimits, double dt) {
