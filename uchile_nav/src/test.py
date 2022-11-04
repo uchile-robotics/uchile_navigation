@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 from move_to import *
-
-
+from geometry_msgs.msg import PoseStamped, Quaternion, TransformStamped, Twist
+from nav_msgs.srv import GetPlan
+import traceback
 
 def main():
     rospy.init_node('fish')
@@ -11,6 +12,20 @@ def main():
     w = input()
     m.set_pose(x,y,w) 
     m.go()
+    get_plan = rospy.ServiceProxy('/move_base/make_plan', GetPlan)
+    print(get_plan)
+    req = GetPlan()
+    req.start = (0,0,0)
+    req.goal = (2.561, 0.068,1)
+    req.tolerance = .5
+    try:
+        resp = get_plan(req.start, req.goal, req.tolerance)
+
+    except:
+        error = traceback.format_exc()
+        print("error: ")
+        print(error)
+    print(resp)
 
 #if __name__ == '__main__':
 #    main()
@@ -28,7 +43,7 @@ def main_w():
     rospy.init_node('fish')
     rooms = {"0": (2.561, 0.068), "1": (5.729, 1.341), "2": (6.114, 3.559), "3":(1.853, 3.303)}
     m = Move()
-    w=1
+    w=90
     print("where would you like to go? (please select as number)")
     print("avaliable: 0=hall, 1=living, 2=kitchen, 3=bedroom")
     place = input()
@@ -41,5 +56,5 @@ def main_w():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
     main_w()
