@@ -17,15 +17,28 @@ class map_navigation():
         rospy.loginfo("|'1': living ")
         rospy.loginfo("|'2': kitchen")
         rospy.loginfo("|'3': bedroom ")
+        rospy.loginfo("|'4': custom")
         rospy.loginfo("|'q': Quit ")
         rospy.loginfo("|-------------------------------|")
         rospy.loginfo("|WHERE TO GO?")
         choice = input()
         return choice
 
+    def _callback(self, msg):
+        msj = msg.status_list[0]
+        status = msj.status
+        #print("----------------------------")
+        #print(msj)
+        #print( type(msj))
+        #print("status:", status)
+        self.status = status
+
     def __init__(self):
-    #sc = SoundClient()
-        path_to_sounds = "/home/ros/catkin_ws/src/gaitech_edu/src/sounds/"
+
+        self.subscriber = rospy.Subscriber('/move_base/status', GoalStatusArray, self._callback)
+        self.status = 1
+
+        path_to_sounds = "/home/ros/catkin_ws/src/sounds/"
         # declare the coordinates of interest
         self.xhall = 2.561
         self.yhall = 0.068
@@ -48,6 +61,14 @@ class map_navigation():
             self.goalReached = self.moveToGoal(self.xkitchen, self.ykitchen)
         elif (choice == 3):
             self.goalReached = self.moveToGoal(self.xbedroom, self.ybedroom)
+        elif (choice == 4): 
+            rospy.loginfo("please enter x:")
+            xcustom = input()
+            rospy.loginfo("please enter y:")
+            ycustom = input()
+            rospy.loginfo("please enter w:")
+            wcustom = input()
+            self.goalReached = self.moveToGoal(xcustom, ycustom)
 
         if (choice!='q'):
             if (self.goalReached):
@@ -65,9 +86,17 @@ class map_navigation():
             elif (choice == 1):
                 self.goalReached = self.moveToGoal(self.xliving, self.yliving)
             elif (choice == 2):
-                self.goalReached = self.moveToGoal(elf.xkitchen, self.ykitchen)
+                self.goalReached = self.moveToGoal(self.xkitchen, self.ykitchen)
             elif (choice == 3):
                 self.goalReached = self.moveToGoal(self.xbedroom, self.ybedroom)
+            elif (choice == 4): 
+                rospy.loginfo("please enter x:")
+                xcustom = input()
+                rospy.loginfo("please enter y:")
+                ycustom = input()
+                rospy.loginfo("please enter w:")
+                wcustom = input()
+                self.goalReached = self.moveToGoal(xcustom, ycustom)
 
             if (choice!='q'):
                 if (self.goalReached):
@@ -85,7 +114,7 @@ class map_navigation():
 
     def moveToGoal(self,xGoal,yGoal):
         #define a client for to send goal requests to the move_base server through a
-        SimpleActionClient
+        #SimpleActionClient
         ac = actionlib.SimpleActionClient("move_base", MoveBaseAction)
         #wait for the action server to come up
         while(not ac.wait_for_server(rospy.Duration.from_sec(5.0))):
@@ -103,6 +132,14 @@ class map_navigation():
         goal.target_pose.pose.orientation.w = 1.0
         rospy.loginfo("Sending goal location ...")
         ac.send_goal(goal)
+
+        while not self.status == 3:
+            print("actual status: ", self.status)
+
+            if self.status ==4 : 
+                #obtener pose actual con amcl_pose
+                # dar orden de giro                
+
         ac.wait_for_result(rospy.Duration(60))
 
         if(ac.get_state() == GoalStatus.SUCCEEDED):

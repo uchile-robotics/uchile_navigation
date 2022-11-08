@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from move_to import *
-from geometry_msgs.msg import PoseStamped, Quaternion, TransformStamped, Twist
+from geometry_msgs.msg import PoseStamped, Quaternion, TransformStamped, Twist, PoseWithCovarianceStamped
 from nav_msgs.srv import GetPlan
 import traceback
 
@@ -12,20 +12,22 @@ def main():
     w = input()
     m.set_pose(x,y,w) 
     m.go()
-    get_plan = rospy.ServiceProxy('/move_base/make_plan', GetPlan)
-    print(get_plan)
-    req = GetPlan()
-    req.start = (0,0,0)
-    req.goal = (2.561, 0.068,1)
-    req.tolerance = .5
-    try:
-        resp = get_plan(req.start, req.goal, req.tolerance)
+    
 
-    except:
-        error = traceback.format_exc()
-        print("error: ")
-        print(error)
-    print(resp)
+    # get_plan = rospy.ServiceProxy('/move_base/make_plan', GetPlan)
+    # print(get_plan)
+    # req = GetPlan()
+    # req.start = (0,0,0)
+    # req.goal = (2.561, 0.068,1)
+    # req.tolerance = .5
+    # try:
+    #     resp = get_plan(req.start, req.goal, req.tolerance)
+
+    # except:
+    #     error = traceback.format_exc()
+    #     print("error: ")
+    #     print(error)
+    # print(resp)
 
 #if __name__ == '__main__':
 #    main()
@@ -50,11 +52,12 @@ def main_w():
     place = str(place)
     print("you choose:"+place)
     room = rooms.get(place, rooms["0"])
-    #default es el hall
+    #verificar si estoy mirando un obstaculo
+
     m.set_pose(room[0], room[1], w)
     m.go()    
 
 
 if __name__ == '__main__':
-    # main()
-    main_w()
+    main()
+    #main_w()
