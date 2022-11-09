@@ -52,7 +52,7 @@ def main_w():
     place = str(place)
     print("you choose:"+place)
     room = rooms.get(place, rooms["0"])
-    #verificar si estoy mirando un obstaculo
+    #verificar si estoy mirando un obstaculo 
 
     m.set_pose(room[0], room[1], w)
     m.go()    
