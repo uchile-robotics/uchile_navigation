@@ -134,9 +134,9 @@ class map_navigation():
         ac.send_goal(goal)
 
         #while not self.status == 3:
-        #    print("actual status: ", self.status)
+            #print("actual status: ", self.status)
 
-        #    if self.status ==4 : 
+            #if self.status ==4 : 
                 #obtener pose actual con amcl_pose
                 # dar orden de giro                
 
