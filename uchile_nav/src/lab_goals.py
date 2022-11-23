@@ -13,10 +13,10 @@ class map_navigation():
         choice='q'
         rospy.loginfo("|-------------------------------|")
         rospy.loginfo("|PRESSE A KEY:")
-        rospy.loginfo("|'0': hall ")
-        rospy.loginfo("|'1': living ")
-        rospy.loginfo("|'2': kitchen")                                       
-        rospy.loginfo("|'3': bedroom ")
+        rospy.loginfo("|'0': INICIO ")
+        rospy.loginfo("|'1': REFRI ")
+        rospy.loginfo("|'2': PIEZA")                                       
+        rospy.loginfo("|'3': SOFA ")
         rospy.loginfo("|'4': custom")
         rospy.loginfo("|'q': Quit ")
         rospy.loginfo("|-------------------------------|")
@@ -24,43 +24,43 @@ class map_navigation():
         choice = input()
         return choice
 
-    def _callback(self, msg):
-        msj = msg.status_list[0]
-        status = msj.status
+    #def _callback(self, msg):
+        #msj = msg.status_list[0]
+        #status = msj.status
         #print("----------------------------")
         #print(msj)
         #print( type(msj))
         #print("status:", status)
-        self.status = status
+        #self.status = status
 
     def __init__(self):
 
-        self.subscriber = rospy.Subscriber('/move_base/status', GoalStatusArray, self._callback)
-        self.status = 1
+        #self.subscriber = rospy.Subscriber('/move_base/status', GoalStatusArray, self._callback)
+        #self.status = 1
 
         path_to_sounds = "/home/ros/catkin_ws/src/sounds/"
         # declare the coordinates of interest
-        self.xhall = 2.561
-        self.yhall = 0.068
-        self.xliving = 5.729
-        self.yliving = 1.341
-        self.xbedroom = 1.853
-        self.ybedroom = 3.303
-        self.xkitchen = 6.114
-        self.ykitchen = 3.559
+        self.xinicio = -1.3478
+        self.yinicio = 5.6232
+        self.xrefri = -1.9517
+        self.yrefri = 2.4806
+        self.xpieza =  -0.4331
+        self.ypieza = 1.4848
+        self.xsofa = 1.3478
+        self.ysofa = 5.6232
         self.goalReached = False
         # initiliaze
         rospy.init_node('map_navigation', anonymous=False)
         choice = self.choose()
 
         if (choice == 0):
-            self.goalReached = self.moveToGoal(self.xhall, self.yhall)
+            self.goalReached = self.moveToGoal(self.xinicio, self.yinicio)
         elif (choice == 1):
-            self.goalReached = self.moveToGoal(self.xliving, self.yliving)
+            self.goalReached = self.moveToGoal(self.xrefri, self.yrefri)
         elif (choice == 2):
-            self.goalReached = self.moveToGoal(self.xkitchen, self.ykitchen)
+            self.goalReached = self.moveToGoal(self.xsofa, self.ysofa)
         elif (choice == 3):
-            self.goalReached = self.moveToGoal(self.xbedroom, self.ybedroom)
+            self.goalReached = self.moveToGoal(self.xpieza, self.ypieza)
         elif (choice == 4): 
             rospy.loginfo("please enter x:")
             xcustom = input()
@@ -82,13 +82,13 @@ class map_navigation():
         while choice != 'q':
             choice = self.choose()
             if (choice == 0):
-                self.goalReached = self.moveToGoal(self.xhall, self.yhall)
+                self.goalReached = self.moveToGoal(self.xinicio, self.yinicio)
             elif (choice == 1):
-                self.goalReached = self.moveToGoal(self.xliving, self.yliving)
+                self.goalReached = self.moveToGoal(self.xrefri, self.yrefri)
             elif (choice == 2):
-                self.goalReached = self.moveToGoal(self.xkitchen, self.ykitchen)
+                self.goalReached = self.moveToGoal(self.xsofa, self.ysofa)
             elif (choice == 3):
-                self.goalReached = self.moveToGoal(self.xbedroom, self.ybedroom)
+                self.goalReached = self.moveToGoal(self.xpieza, self.ypieza)
             elif (choice == 4): 
                 rospy.loginfo("please enter x:")
                 xcustom = input()

@@ -14,31 +14,14 @@ def main():
     m.go()
     
 
-    # get_plan = rospy.ServiceProxy('/move_base/make_plan', GetPlan)
-    # print(get_plan)
-    # req = GetPlan()
-    # req.start = (0,0,0)
-    # req.goal = (2.561, 0.068,1)
-    # req.tolerance = .5
-    # try:
-    #     resp = get_plan(req.start, req.goal, req.tolerance)
 
-    # except:
-    #     error = traceback.format_exc()
-    #     print("error: ")
-    #     print(error)
-    # print(resp)
-
-#if __name__ == '__main__':
-#    main()
-'''
-if __name__ == '__main__':
-    rospy.init_node('fish')
-    m = Move()
-    m.set_pose(1, 3, 60)
-    #m.get_pose()
-    m.go()
-'''
+# if __name__ == '__main__':
+#     rospy.init_node('fish')
+#     m = Move()
+#     m.set_pose(1, 3, 60)
+#     #m.get_pose()
+#     m.go()
+# '''
 
 
 def main_w():
@@ -61,3 +44,23 @@ def main_w():
 if __name__ == '__main__':
     main()
     #main_w()
+
+
+
+def demo():
+    rospy.init_node('fish')
+    rooms = {"inicio": (-1.3478, 5.6232, 0.0), "refri": (-1.9517, 2.4806, 0.45), "pieza": (-0.4331, 1.4848, 0.0), "sofa": (1.3478, 5.6232, 1.0)}
+
+    m = Move()
+
+    print("Starting demo .... ")
+    print("First goal is the refri")
+    room = rooms["refri"]
+    print("refri is at: ", room)
+    m.set_pose(room[0], room[1], room[2])
+    m.go()
+
+
+
+
+
