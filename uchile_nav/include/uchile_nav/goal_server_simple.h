@@ -1,5 +1,5 @@
 /**
- * Simplified version of goal server
+ * Simplified version of goal server (adapted from Matias Pavez implementation)
  * @author: Gonzalo Olguin
  * @email: golguinm@gmail.com
 */
@@ -30,6 +30,7 @@
 // Move Base Client
 #include <actionlib/client/simple_action_client.h>
 #include <move_base_msgs/MoveBaseAction.h>
+
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient; 
 
 
@@ -52,6 +53,7 @@ class GoalServerSimple
         float _goal_sigma_x;
         float _goal_sigma_y;
         float _goal_sigma_angle;
+        // uchile_nav::state_t _arrivedState;
 
         // publishers
         ros::Publisher _initial_pose_pub;
@@ -66,7 +68,7 @@ class GoalServerSimple
         ros::ServiceServer _look_to_pose_srv;
         // ros::ServiceServer _approach_to_pose_srv;
         ros::ServiceServer _cancel_goal_srv;
-        // ros::ServiceServer _has_arrived_srv;
+        ros::ServiceServer _has_arrived_srv;
         ros::ServiceServer _get_current_pose_srv;
 
         // Move base client
@@ -78,12 +80,16 @@ class GoalServerSimple
         void _goalDoneCb(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseResultConstPtr &result) {
             ROS_INFO_STREAM("Goal finished by move_base simple action client");
             _is_goal_done = true;
+            if (_arrivedState == uchile_nav::GOAL_CANCELED) return;
+            _arrivedState = uchile_nav::GOAL_REACHED;
         }
 
         geometry_msgs::PoseStamped getCurrentPose();
         move_base_msgs::MoveBaseGoal calculeLookGoal(geometry_msgs::PoseStamped current_pose, move_base_msgs::MoveBaseGoal look_pose);
 
     public:
+    uchile_nav::state_t _arrivedState;
+
         GoalServerSimple(ros::NodeHandle& nh);
         bool sendGoal(move_base_msgs::MoveBaseGoal goal);
         bool goToPose(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res);
@@ -92,6 +98,8 @@ class GoalServerSimple
         bool cancelGoal(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
         bool hasArrived(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res);
         bool getCurrentPose(uchile_srvs::PoseStamped::Request &req, uchile_srvs::PoseStamped::Response &res);
+        uchile_nav::state_t checkAbortedState();
+        int getArrivedState();
         bool transformPose(geometry_msgs::PoseStamped goal, move_base_msgs::MoveBaseGoal& transformed_goal);
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // - - - - - - - S u b s c r i b e r   C a l l b a c k s  -  - - - - - - - - - -

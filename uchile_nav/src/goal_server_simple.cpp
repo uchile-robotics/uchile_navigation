@@ -18,15 +18,20 @@ GoalServerSimple::GoalServerSimple(ros::NodeHandle& nh)
   _cancel_goal_srv   = nh_.advertiseService("cancel", &GoalServerSimple::cancelGoal, this);
   _look_to_pose_srv  = nh_.advertiseService("look", &GoalServerSimple::lookToPose, this);
   _get_current_pose_srv = nh_.advertiseService("get_current_pose", &GoalServerSimple::getCurrentPose, this);
+  _has_arrived_srv = nh_.advertiseService("has_arrived", &GoalServerSimple::hasArrived, this);
+
+  // Initialize states
+  _arrivedState = uchile_nav::GOAL_WAITING;
 }
 
 /**
 * GOTOPOSE
-* @params: a
-* @return: b
+* @params: Receives a naviga5tion request as a PoseStamped
+* @return: True 
 */
 bool GoalServerSimple::goToPose(uchile_srvs::NavGoal::Request &req, uchile_srvs::NavGoal::Response &res)
 {
+  this->_arrivedState = uchile_nav::GOAL_WALKING;
   move_base_msgs::MoveBaseGoal transformed_goal;
   if (!this->transformPose(req.goal, transformed_goal)) {
 		return false;
@@ -44,16 +49,19 @@ bool GoalServerSimple::goToPose(uchile_srvs::NavGoal::Request &req, uchile_srvs:
   if(_mbc.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
   {
     ROS_INFO("Hooray, the base moved succesfully");
+	this->_arrivedState = uchile_nav::GOAL_REACHED;
     return true;
   }
 
-  ROS_INFO("Robot failed to move");
+//   ROS_INFO("Robot failed to move");
+//   this->_arrivedState = uchile_nav::GOAL_ABORTED;
   return false;
 }
 
 bool GoalServerSimple::sendGoal(move_base_msgs::MoveBaseGoal goal) {
 
 	// trick to avoid sending a goal which can be cancelled by cancelGoal()
+	this->_arrivedState = uchile_nav::GOAL_WALKING;
 	ros::Duration(0.15).sleep();
 
 	_is_goal_done = false;
@@ -83,6 +91,7 @@ bool GoalServerSimple::cancelGoal(std_srvs::Empty::Request &req, std_srvs::Empty
 		// just cancel past goals
 		// _mbc.cancelGoalsAtAndBeforeTime(ros::Time::now()- ros::Duration(0.1));
 		_mbc.cancelAllGoals();
+		this->_arrivedState = uchile_nav::GOAL_CANCELED;
 		ROS_INFO("Goals cancelled");
 
 	} catch (std::exception& e) {
@@ -105,23 +114,34 @@ bool GoalServerSimple::lookToPose(uchile_srvs::NavGoal::Request &req, uchile_srv
 
 	if (!this->transformPose(req.goal, transformed_goal) ) {
 		return false;
-	}
-	
+	}	
 	goal = this->calculeLookGoal(this->getCurrentPose(), transformed_goal);
-	// bool reached = false;
-	// kp = 0;
-	// while(!reached) 
-	// {
-
-	// }
 
 	return this->sendGoal(goal);
 }
 
+
+/**
+ * @description: 
+ * @param:  
+ * @return:
+*/
 bool GoalServerSimple::getCurrentPose(uchile_srvs::PoseStamped::Request &req, uchile_srvs::PoseStamped::Response &res)
 {
 	res.pose_out = this->getCurrentPose();
 	return true;
+}
+
+
+/**
+ * @description: 
+ * @param:  
+ * @return:
+*/
+bool GoalServerSimple::hasArrived(uchile_srvs::NavGoal::Request  &req, uchile_srvs::NavGoal::Response &res)
+{
+	res.state = this->getArrivedState();
+    return true;
 }
 
 /**
@@ -187,6 +207,48 @@ geometry_msgs::PoseStamped GoalServerSimple::getCurrentPose() {
 	return ps_out;
 }
 
+
+/**
+ * @description: 
+ * @param:  
+ * @return:
+*/
+uchile_nav::state_t GoalServerSimple::checkAbortedState() {
+
+	actionlib::SimpleClientGoalState state = _mbc.getState();
+
+	//ROS_WARN_STREAM("MBC STATE: " << state.toString());
+
+	if (   state == actionlib::SimpleClientGoalState::ABORTED
+	    || state == actionlib::SimpleClientGoalState::REJECTED) {
+
+		return uchile_nav::GOAL_ABORTED;
+
+	} else if ( state == actionlib::SimpleClientGoalState::PREEMPTED ) {
+
+		return uchile_nav::GOAL_CANCELED;
+
+	}
+
+	return uchile_nav::GOAL_OTHER;
+}
+
+/**
+ * @description: 
+ * @param:  
+ * @return:
+*/
+int GoalServerSimple::getArrivedState() {
+
+	uchile_nav::state_t action_state = this->checkAbortedState();
+
+	if (action_state == uchile_nav::GOAL_ABORTED) {
+		return action_state;
+	}
+
+	return this->_arrivedState;
+}
+
 /**
  * @description: 
  * @param:  
@@ -243,6 +305,8 @@ int main(int argc, char** argv) {
 
 	ros::Rate r(20);
 	int counter = 0;
+	uchile_nav::state_t last_arrived_state = server_simple._arrivedState;
+
 	while (ros::ok()) {
 
 		// if (counter < 1) {
@@ -251,6 +315,12 @@ int main(int argc, char** argv) {
 		// counter = (counter+1)%4; // update at // 5 hz
 		ros::spinOnce();
 		r.sleep();
+
+		if (server_simple._arrivedState != last_arrived_state)
+		{
+			ROS_INFO("Reached state: %i", (int )server_simple._arrivedState);
+			last_arrived_state = server_simple._arrivedState;
+		}
 	}
 
 	std::cout << "\n\nQuitting ... \n" << std::endl;
