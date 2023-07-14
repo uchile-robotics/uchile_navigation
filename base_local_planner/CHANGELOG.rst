@@ -2,19 +2,110 @@
 Changelog for package base_local_planner
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.12.4 (2015-06-03)
+1.16.6 (2020-03-18)
 -------------------
-* fix stuck_left/right calculation
+* Fix Unknown CMake command check_include_file (navfn & base_local_planner) (`#975 <https://github.com/ros-planning/navigation/issues/975>`_)
+* Contributors: Sam Pfeiffer
+
+1.16.5 (2020-03-15)
+-------------------
+* [melodic] updated install for better portability. (`#973 <https://github.com/ros-planning/navigation/issues/973>`_)
+* Contributors: Sean Yen
+
+1.16.4 (2020-03-04)
+-------------------
+* Fixes gdist- and pdist_scale node paramter names (`#936 <https://github.com/cobalt-robotics/navigation/issues/936>`_)
+  Renames goal and path distance dynamic reconfigure parameter
+  names in the cfg file in order to actually make the parameters
+  used by the trajectory planner changeable.
+  Fixes `#935 <https://github.com/cobalt-robotics/navigation/issues/935>`_
+* don't include a main() function in base_local_planner library (`#969 <https://github.com/cobalt-robotics/navigation/issues/969>`_)
+* [Windows][melodic] Navigation (except for map_server and amcl) Windows build bring up (`#851 <https://github.com/cobalt-robotics/navigation/issues/851>`_)
+* Contributors: David Leins, Sean Yen, ipa-fez
+
+1.16.3 (2019-11-15)
+-------------------
+* Merge branch 'melodic-devel' into layer_clear_area-melodic
+* Provide different negative values for unknown and out-of-map costs (`#833 <https://github.com/ros-planning/navigation/issues/833>`_)
+* Merge pull request `#857 <https://github.com/ros-planning/navigation/issues/857>`_ from jspricke/add_include
+  Add missing header
+* Add missing header
+* [kinetic] Fix for adjusting plan resolution (`#819 <https://github.com/ros-planning/navigation/issues/819>`_)
+  * Fix for adjusting plan resolution
+  * Simpler math expression
+* Contributors: David V. Lu!!, Jochen Sprickerhof, Jorge Santos Simón, Michael Ferguson, Steven Macenski
+
+1.16.2 (2018-07-31)
+-------------------
+* Merge pull request `#773 <https://github.com/ros-planning/navigation/issues/773>`_ from ros-planning/packaging_fixes
+  packaging fixes
+* add explicit sensor_msgs, tf2 depends for base_local_planner
 * Contributors: Michael Ferguson
 
-1.12.3 (2015-04-30)
+1.16.1 (2018-07-28)
 -------------------
 
-1.12.2 (2015-03-31)
+1.16.0 (2018-07-25)
+-------------------
+* Remove PCL `#765 <https://github.com/ros-planning/navigation/issues/765>`_
+* Switch to TF2 `#755 <https://github.com/ros-planning/navigation/issues/755>`_
+* Fix trajectory obstacle scoring in dwa_local_planner.
+* Make trajectory scoring scales consistent.
+* unify parameter names between base_local_planner and dwa_local_planner
+  addresses parts of `#90 <https://github.com/ros-planning/navigation/issues/90>`_
+* fix param to min_in_place_vel_theta, closes `#487 <https://github.com/ros-planning/navigation/issues/487>`_
+* add const to getLocalPlane, fixes `#709 <https://github.com/ros-planning/navigation/issues/709>`_
+* Merge pull request `#732 <https://github.com/ros-planning/navigation/issues/732>`_ from marting87/small_typo_fixes
+  Small typo fixes in ftrajectory_planner_ros and robot_pose_ekf
+* Fixed typos for base_local_planner
+* Contributors: Alexander Moriarty, David V. Lu, Martin Ganeff, Michael Ferguson, Pavlo Kolomiiets, Rein Appeldoorn, Vincent Rabaud, moriarty
+
+1.15.2 (2018-03-22)
+-------------------
+* Merge pull request `#673 <https://github.com/ros-planning/navigation/issues/673>`_ from ros-planning/email_update_lunar
+  update maintainer email (lunar)
+* CostmapModel: Make lineCost and pointCost public (`#658 <https://github.com/ros-planning/navigation/issues/658>`_)
+  Make the methods `lineCost` and `pointCost` of the CostmapModel class
+  public so they can be used outside of the class.
+  Both methods are not changing the instance, so this should not cause any
+  problems.  To emphasise their constness, add the actual `const` keyword.
+* Merge pull request `#649 <https://github.com/ros-planning/navigation/issues/649>`_ from aaronhoy/lunar_add_ahoy
+  Add myself as a maintainer.
+* Contributors: Aaron Hoy, Felix Widmaier, Michael Ferguson
+
+1.15.1 (2017-08-14)
 -------------------
 
-1.12.1 (2015-03-14)
+1.15.0 (2017-08-07)
 -------------------
+* set message_generation build and runtime dependency
+* convert packages to format2
+* cleaner logic, fixes `#156 <https://github.com/ros-planning/navigation/issues/156>`_
+* Merge pull request `#596 <https://github.com/ros-planning/navigation/issues/596>`_ from ros-planning/lunar_548
+* Add cost function to prevent unnecessary spinning
+* Fix CMakeLists + package.xmls (`#548 <https://github.com/ros-planning/navigation/issues/548>`_)
+* add missing deps on libpcl
+* import only PCL common
+* pcl proagate -lQt5::Widgets flag so we need to find_package Qt5Widgets (`#578 <https://github.com/ros-planning/navigation/issues/578>`_)
+* make rostest in CMakeLists optional (`ros/rosdistro#3010 <https://github.com/ros/rosdistro/issues/3010>`_)
+* remove GCC warnings
+* Contributors: Lukas Bulwahn, Martin Günther, Michael Ferguson, Mikael Arguedas, Morgan Quigley, Vincent Rabaud, lengly
+
+1.14.0 (2016-05-20)
+-------------------
+
+1.13.1 (2015-10-29)
+-------------------
+* base_local_planner: some fixes in goal_functions
+* Merge pull request `#348 <https://github.com/ros-planning/navigation/issues/348>`_ from mikeferguson/trajectory_planner_fixes
+* fix stuck_left/right calculation
+* fix calculation of heading diff
+* Contributors: Gael Ecorchard, Michael Ferguson
+
+1.13.0 (2015-03-17)
+-------------------
+* remove previously deprecated param
+* Contributors: Michael Ferguson
 
 1.12.0 (2015-02-04)
 -------------------

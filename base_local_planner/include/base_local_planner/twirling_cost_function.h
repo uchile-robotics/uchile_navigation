@@ -2,7 +2,7 @@
  *
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2008, Willow Garage, Inc.
+ *  Copyright (c) 2017, Open Source Robotics Foundation, Inc.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -32,80 +32,33 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- * Author: Eitan Marder-Eppstein
+ * Author: Morgan Quigley
  *********************************************************************/
 
-#ifndef ABSTRACT_LOCAL_PLANNER_ODOM_H_
-#define ABSTRACT_LOCAL_PLANNER_ODOM_H_
+#ifndef TWIRLING_COST_FUNCTION_H
+#define TWIRLING_COST_FUNCTION_H
 
-#include <nav_core/base_local_planner.h>
-
-#include <boost/thread.hpp>
-
-#include <costmap_2d/costmap_2d.h>
-#include <tf2_ros/buffer.h>
-
-#include <base_local_planner/local_planner_limits.h>
-
+#include <base_local_planner/trajectory_cost_function.h>
 
 namespace base_local_planner {
 
 /**
- * @class LocalPlannerUtil
- * @brief Helper class implementing infrastructure code many local planner implementations may need.
+ * This class provides a cost based on how much a robot "twirls" on its
+ * way to the goal. With differential-drive robots, there isn't a choice,
+ * but with holonomic or near-holonomic robots, sometimes a robot spins
+ * more than you'd like on its way to a goal. This class provides a way
+ * to assign a penalty purely to rotational velocities.
  */
-class LocalPlannerUtil {
-
-private:
-  // things we get from move_base
-  std::string name_;
-  std::string global_frame_;
-
-  costmap_2d::Costmap2D* costmap_;
-  tf2_ros::Buffer* tf_;
-
-
-  std::vector<geometry_msgs::PoseStamped> global_plan_;
-
-
-  boost::mutex limits_configuration_mutex_;
-  bool setup_;
-  LocalPlannerLimits default_limits_;
-  LocalPlannerLimits limits_;
-  bool initialized_;
-
+class TwirlingCostFunction: public base_local_planner::TrajectoryCostFunction {
 public:
 
-  /**
-   * @brief  Callback to update the local planner's parameters
-   */
-  void reconfigureCB(LocalPlannerLimits &config, bool restore_defaults);
+  TwirlingCostFunction() {}
+  ~TwirlingCostFunction() {}
 
-  LocalPlannerUtil() : initialized_(false) {}
+  double scoreTrajectory(Trajectory &traj);
 
-  ~LocalPlannerUtil() {
-  }
-
-  void initialize(tf2_ros::Buffer* tf,
-      costmap_2d::Costmap2D* costmap,
-      std::string global_frame);
-
-  bool getGoal(geometry_msgs::PoseStamped& goal_pose);
-
-  bool setPlan(const std::vector<geometry_msgs::PoseStamped>& orig_global_plan);
-
-  bool getLocalPlan(const geometry_msgs::PoseStamped& global_pose, std::vector<geometry_msgs::PoseStamped>& transformed_plan);
-
-  costmap_2d::Costmap2D* getCostmap();
-
-  LocalPlannerLimits getCurrentLimits();
-
-  std::string getGlobalFrame(){ return global_frame_; }
+  bool prepare() {return true;};
 };
 
-
-
-
-};
-
-#endif /* ABSTRACT_LOCAL_PLANNER_ODOM_H_ */
+} /* namespace base_local_planner */
+#endif /* TWIRLING_COST_FUNCTION_H_ */

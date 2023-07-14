@@ -50,6 +50,8 @@
 
 //for computing path distance
 #include <queue>
+#include <tf2/LinearMath/Matrix3x3.h>
+#include <tf2/utils.h>
 
 using namespace std;
 using namespace costmap_2d;
@@ -77,16 +79,15 @@ namespace base_local_planner{
       sim_granularity_ = config.sim_granularity;
       angular_sim_granularity_ = config.angular_sim_granularity;
 
-      pdist_scale_ = config.pdist_scale;
-      gdist_scale_ = config.gdist_scale;
+      path_distance_bias_ = config.path_distance_bias;
+      goal_distance_bias_ = config.goal_distance_bias;
       occdist_scale_ = config.occdist_scale;
 
       if (meter_scoring_) {
         //if we use meter scoring, then we want to multiply the biases by the resolution of the costmap
         double resolution = costmap_.getResolution();
-        gdist_scale_ *= resolution;
-        pdist_scale_ *= resolution;
-        occdist_scale_ *= resolution;
+        goal_distance_bias_ *= resolution;
+        path_distance_bias_ *= resolution;
       }
 
       oscillation_reset_dist_ = config.oscillation_reset_dist;
@@ -144,7 +145,7 @@ namespace base_local_planner{
       double acc_lim_x, double acc_lim_y, double acc_lim_theta,
       double sim_time, double sim_granularity,
       int vx_samples, int vtheta_samples,
-      double pdist_scale, double gdist_scale, double occdist_scale,
+      double path_distance_bias, double goal_distance_bias, double occdist_scale,
       double heading_lookahead, double oscillation_reset_dist,
       double escape_reset_dist, double escape_reset_theta,
       bool holonomic_robot,
@@ -159,7 +160,7 @@ namespace base_local_planner{
     world_model_(world_model), footprint_spec_(footprint_spec),
     sim_time_(sim_time), sim_granularity_(sim_granularity), angular_sim_granularity_(angular_sim_granularity),
     vx_samples_(vx_samples), vtheta_samples_(vtheta_samples),
-    pdist_scale_(pdist_scale), gdist_scale_(gdist_scale), occdist_scale_(occdist_scale),
+    path_distance_bias_(path_distance_bias), goal_distance_bias_(goal_distance_bias), occdist_scale_(occdist_scale),
     acc_lim_x_(acc_lim_x), acc_lim_y_(acc_lim_y), acc_lim_theta_(acc_lim_theta),
     prev_x_(0), prev_y_(0), escape_x_(0), escape_y_(0), escape_theta_(0), heading_lookahead_(heading_lookahead),
     oscillation_reset_dist_(oscillation_reset_dist), escape_reset_dist_(escape_reset_dist),
@@ -203,7 +204,7 @@ namespace base_local_planner{
     }
     path_cost = cell.target_dist;
     goal_cost = goal_cell.target_dist;
-    total_cost = pdist_scale_ * path_cost + gdist_scale_ * goal_cost + occdist_scale_ * occ_cost;
+    total_cost = path_distance_bias_ * path_cost + goal_distance_bias_ * goal_cost + occdist_scale_ * occ_cost;
     return true;
   }
 
@@ -361,40 +362,27 @@ namespace base_local_planner{
     //ROS_INFO("OccCost: %f, vx: %.2f, vy: %.2f, vtheta: %.2f", occ_cost, vx_samp, vy_samp, vtheta_samp);
     double cost = -1.0;
     if (!heading_scoring_) {
-      cost = pdist_scale_ * path_dist + goal_dist * gdist_scale_ + occdist_scale_ * occ_cost;
+      cost = path_distance_bias_ * path_dist + goal_dist * goal_distance_bias_ + occdist_scale_ * occ_cost;
     } else {
-      cost = occdist_scale_ * occ_cost + pdist_scale_ * path_dist + 0.3 * heading_diff + goal_dist * gdist_scale_;
+      cost = occdist_scale_ * occ_cost + path_distance_bias_ * path_dist + 0.3 * heading_diff + goal_dist * goal_distance_bias_;
     }
     traj.cost_ = cost;
   }
 
   double TrajectoryPlanner::headingDiff(int cell_x, int cell_y, double x, double y, double heading){
-    double heading_diff = DBL_MAX;
     unsigned int goal_cell_x, goal_cell_y;
-    const double v2_x = cos(heading);
-    const double v2_y = sin(heading);
 
-    //find a clear line of sight from the robot's cell to a point on the path
+    // find a clear line of sight from the robot's cell to a farthest point on the path
     for (int i = global_plan_.size() - 1; i >=0; --i) {
       if (costmap_.worldToMap(global_plan_[i].pose.position.x, global_plan_[i].pose.position.y, goal_cell_x, goal_cell_y)) {
         if (lineCost(cell_x, goal_cell_x, cell_y, goal_cell_y) >= 0) {
           double gx, gy;
           costmap_.mapToWorld(goal_cell_x, goal_cell_y, gx, gy);
-          double v1_x = gx - x;
-          double v1_y = gy - y;
-
-          double perp_dot = v1_x * v2_y - v1_y * v2_x;
-          double dot = v1_x * v2_x + v1_y * v2_y;
-
-          //get the signed angle
-          double vector_angle = atan2(perp_dot, dot);
-
-          heading_diff = fabs(vector_angle);
-          return heading_diff;
+          return fabs(angles::shortest_angular_distance(heading, atan2(gy - y, gx - x)));
         }
       }
     }
-    return heading_diff;
+    return DBL_MAX;
   }
 
   //calculate the cost of a ray-traced line
@@ -908,21 +896,19 @@ namespace base_local_planner{
 
 
     //if the trajectory failed because the footprint hits something, we're still going to back up
-    if(best_traj->cost_ == -1.0) {
-    	//best_traj->cost_ = 1.0;
-    	ROS_WARN("base_local_planner escape behavior overriden for bender robot, old behavior would have tried to escape even when the footprint hits something.");
-    }
+    if(best_traj->cost_ == -1.0)
+      best_traj->cost_ = 1.0;
 
     return *best_traj;
 
   }
 
   //given the current state of the robot, find a good trajectory
-  Trajectory TrajectoryPlanner::findBestPath(tf::Stamped<tf::Pose> global_pose, tf::Stamped<tf::Pose> global_vel,
-      tf::Stamped<tf::Pose>& drive_velocities){
+  Trajectory TrajectoryPlanner::findBestPath(const geometry_msgs::PoseStamped& global_pose,
+      geometry_msgs::PoseStamped& global_vel, geometry_msgs::PoseStamped& drive_velocities) {
 
-    Eigen::Vector3f pos(global_pose.getOrigin().getX(), global_pose.getOrigin().getY(), tf::getYaw(global_pose.getRotation()));
-    Eigen::Vector3f vel(global_vel.getOrigin().getX(), global_vel.getOrigin().getY(), tf::getYaw(global_vel.getRotation()));
+    Eigen::Vector3f pos(global_pose.pose.position.x, global_pose.pose.position.y, tf2::getYaw(global_pose.pose.orientation));
+    Eigen::Vector3f vel(global_vel.pose.position.x, global_vel.pose.position.y, tf2::getYaw(global_vel.pose.orientation));
 
     //reset the map for new operations
     path_map_.resetPathDist();
@@ -978,14 +964,21 @@ namespace base_local_planner{
     */
 
     if(best.cost_ < 0){
-      drive_velocities.setIdentity();
+      drive_velocities.pose.position.x = 0;
+      drive_velocities.pose.position.y = 0;
+      drive_velocities.pose.position.z = 0;
+      drive_velocities.pose.orientation.w = 1;
+      drive_velocities.pose.orientation.x = 0;
+      drive_velocities.pose.orientation.y = 0;
+      drive_velocities.pose.orientation.z = 0;
     }
     else{
-      tf::Vector3 start(best.xv_, best.yv_, 0);
-      drive_velocities.setOrigin(start);
-      tf::Matrix3x3 matrix;
-      matrix.setRotation(tf::createQuaternionFromYaw(best.thetav_));
-      drive_velocities.setBasis(matrix);
+      drive_velocities.pose.position.x = best.xv_;
+      drive_velocities.pose.position.y = best.yv_;
+      drive_velocities.pose.position.z = 0;
+      tf2::Quaternion q;
+      q.setRPY(0, 0, best.thetav_);
+      tf2::convert(q, drive_velocities.pose.orientation);
     }
 
     return best;
