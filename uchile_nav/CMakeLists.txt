@@ -56,3 +56,9 @@ add_executable(
 add_dependencies(goal_server ${catkin_EXPORTED_TARGETS})
 target_link_libraries(goal_server ${catkin_LIBRARIES})
 
+add_executable(
+  goal_server_simple
+  src/goal_server_simple.cpp
+)
+add_dependencies(goal_server_simple ${catkin_EXPORTED_TARGETS})
+target_link_libraries(goal_server_simple ${catkin_LIBRARIES})
