@@ -1,3 +1,0 @@
-# uchile_navigation
-
-## TODO
