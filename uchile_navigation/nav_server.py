@@ -21,6 +21,8 @@ class NavigationSkill(Node):
             10
         )
         self.current_pose = None
+        self._get_result_future = None
+        self.last_result = None
         if not self.check_server_init():
             raise NotInitializedError("Server is not available, remember to launch the robot's launch files")
     
@@ -40,6 +42,10 @@ class NavigationSkill(Node):
         x = self.current_pose.position.x
         y = self.current_pose.position.y
         return (x, y, theta)
+
+    def is_localized(self) -> bool:
+        return self.current_pose is not None
+
 
     def go_to_point(self, x, y, theta=0.0, use_robot_frame=False):
         """ Sets a goal for the robot in a given frame.
@@ -78,15 +84,42 @@ class NavigationSkill(Node):
             return
         self.get_logger().info('Goal accepted')
         self._get_result_future = self._goal_handle.get_result_async()
-        self._get_result_future.add_done_callback(self.reached)
+        self._get_result_future.add_done_callback(self._reached_callback)
 
-    def cancel_navigation(self):
+    def cancel(self) -> bool:
+        """ Cancels the current goal
+        Returns True if cancelled correctly
+        Returns False if there is no goal to cancel
+        """
         if self._goal_handle:
             self.get_logger().info('Cancelling current goal...')
             cancel_future = self._goal_handle.cancel_goal_async()
             cancel_future.add_done_callback(self._cancel_callback)
+            return True
+        self.get_logger().warn('No active goal to cancel.')
+        return False
+    
+    def wait_for_result(self, timeout=None):
+        """A method that stops the code to continue running until the robot reaches
+        its destination
+
+        Args:
+            timeout (int, optional): Time waited until the robot reaches its goal. Defaults to None.
+
+        Returns:
+            int or none
+             
+        """
+        if self._get_result_future is not None:
+            rclpy.spin_until_future_complete(self, self._get_result_future, timeout_sec=timeout)
+            if self._get_result_future.done():
+                return self.reached()
+            else:
+                self.get_logger().warn('Timed out waiting for navigation result.')
+                return None
         else:
-            self.get_logger().warn('No active goal to cancel.')
+            self.get_logger().warn('No goal has been sent yet.')
+            return None
 
     def _cancel_callback(self, future):
         cancel_response = future.result()
@@ -95,22 +128,32 @@ class NavigationSkill(Node):
         else:
             self.get_logger().info('Failed to cancel goal.')
 
-    def reached(self, future):
-        result = future.result().result
-        self.get_logger().info(f'Navigation result: {result}')
-        return result
-    
-    def look_point(self, x: float, y: float):
+    def _reached_callback(self, future):
+        self.last_result = future.result().result
+        if self.last_result == 0:
+            self.get_logger().info('Navigation succeeded')
+        elif self.last_result == 1:
+            self.get_logger().info('Navigation was canceled')
+        else:
+            self.get_logger().warn(f'Navigation failed with result code: {self.last_result}')
+
+    def reached(self) -> bool:
+        """ Returns true if the last goal was successful
+        """
+        return self.last_result == 0
+
+    def look_point(self, x: float, y: float) -> None:
         """ Makes the robot look to a given point in space
         """    
         theta = np.arctan2(y, x)
-        self.go_to_point(0.0, 0.0, theta, frame_id='base_link')
+        self.go_to_point(0.0, 0.0, theta, use_robot_frame=False)
 
 def main(args=None):
     rclpy.init(args=args)
     nav_skill = NavigationSkill()
     time.sleep(2)  
     nav_skill.go_to_point(1.0, 2.0, 0.0)
+
     rclpy.spin(nav_skill)
     nav_skill.destroy_node()
     rclpy.shutdown()
