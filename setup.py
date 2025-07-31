@@ -20,7 +20,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'uchile_navigation_node = uchile_navigation.nav_server:main'
+            'uchile_navigation_node = uchile_navigation.nav_server:main',
+            'demo_nav = uchile_navigation.examples.demo_nav:main',
+            'frontier_explorer = uchile_navigation.frontier_explorer:main',
         ],
     },
 )
