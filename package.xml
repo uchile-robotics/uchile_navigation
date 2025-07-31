@@ -12,8 +12,7 @@
   <depend>nav_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>tf_transformations</depend>
-  <depend>python3-scikit-learn</depend>
-
+  
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
