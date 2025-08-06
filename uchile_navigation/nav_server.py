@@ -3,6 +3,7 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from nav2_msgs.action import NavigateToPose
+from nav2_msgs.action import Spin
 from action_msgs.msg import GoalStatus
 from rclpy.action import ActionClient
 from tf_transformations import quaternion_from_euler, euler_from_quaternion
@@ -14,6 +15,7 @@ class NavigationSkill(Node):
     def __init__(self):
         super().__init__('navigation_skill')
         self._nav_to_pose_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
+        self._spin_client = ActionClient(self, Spin, 'spin')
         self._goal_handle = None
         self._pose_sub = self.create_subscription(
             PoseWithCovarianceStamped,
@@ -23,12 +25,20 @@ class NavigationSkill(Node):
         )
         self.current_pose = None
         self._get_result_future = None
+        self._nav_goal_handle = None
+        self._spin_goal_handle = None
+        self._nav_result_future = None
+        self._spin_result_future = None
         self.last_result = None
+
         if not self.check_server_init():
             raise NotInitializedError("Server is not available, remember to launch the robot's launch files")
     
     def check_server_init(self):
-        return self._nav_to_pose_client.wait_for_server(timeout_sec=5.0)
+        spin_ok = self._spin_client.wait_for_server(timeout_sec=5.0)  # <-- NUEVO
+        nav_ok = self._nav_to_pose_client.wait_for_server(timeout_sec=5.0) 
+        return nav_ok and spin_ok
+
     def _pose_callback(self, msg):
         self.current_pose = msg.pose.pose 
     
@@ -74,25 +84,25 @@ class NavigationSkill(Node):
         goal_msg.pose.pose.orientation.z = q[2]
         goal_msg.pose.pose.orientation.w = q[3]
 
-        self._send_goal_future = self._nav_to_pose_client.send_goal_async(
+        self._nav_result_future = self._nav_to_pose_client.send_goal_async(
             goal_msg,
             feedback_callback=self._feedback_callback
         )
-        self._send_goal_future.add_done_callback(self._goal_response_callback)
-        return True
+        self._nav_result_future.add_done_callback(self._goal_response_callback)
+
 
     def _feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
         self.get_logger().info(f'Received feedback: {feedback}')
 
     def _goal_response_callback(self, future):
-        self._goal_handle = future.result()
-        if not self._goal_handle.accepted:
+        self._nav_goal_handle = future.result()
+        if not self._nav_goal_handle.accepted:
             self.get_logger().info('Goal rejected')
             return
         self.get_logger().info('Goal accepted')
-        self._get_result_future = self._goal_handle.get_result_async()
-        self._get_result_future.add_done_callback(self._reached_callback)
+        result_future = self._nav_goal_handle.get_result_async()
+        result_future.add_done_callback(self._reached_callback)
 
     def cancel(self) -> bool:
         """ Cancels the current goal
@@ -106,24 +116,51 @@ class NavigationSkill(Node):
             return True
         self.get_logger().warn('No active goal to cancel.')
         return False
-    
-    def wait_for_result(self, timeout=None):
-        """A method that stops the code to continue running until the robot reaches
-        its destination
 
-        Args:
-            timeout (int, optional): Time waited until the robot reaches its goal. Defaults to None.
+    def spin_in_place(self, angle_radians: float) -> bool:
+        """Command the robot to spin in place by a given angle (in radians)."""
+        goal_msg = Spin.Goal()
+        goal_msg.target_yaw = angle_radians
+        goal_msg.time_allowance = rclpy.duration.Duration(seconds=15.0).to_msg()
 
-        Returns:
-            int or none
-             
+        self.get_logger().info(f"Sending spin goal: {angle_radians:.2f} rad")
+        self._spin_result_future = self._spin_client.send_goal_async(
+            goal_msg,
+            feedback_callback=self._feedback_callback_spin
+        )
+        self._spin_result_future.add_done_callback(self._goal_response_callback_spin)
+
+    def _feedback_callback_spin(self, feedback_msg):
+        feedback = feedback_msg.feedback
+        self.get_logger().info(f"Spin feedback: {feedback}")
+
+    def _goal_response_callback_spin(self, future):
+        self._spin_goal_handle = future.result()
+        if not self._spin_goal_handle.accepted:
+            self.get_logger().info('Spin goal rejected')
+            return
+        self.get_logger().info('Spin goal accepted')
+        result_future = self._spin_goal_handle.get_result_async()
+        result_future.add_done_callback(self._reached_callback)
+
+    def wait_for_result(self, timeout=None, action_type="navigate"):
+        """Waits for the result of the last sent goal.
+        action_type: "navigate" or "spin"
         """
-        if self._get_result_future is not None:
-            rclpy.spin_until_future_complete(self, self._get_result_future, timeout_sec=timeout)
-            if self._get_result_future.done():
+        if action_type == "navigate":
+            future = self._nav_result_future
+        elif action_type == "spin":
+            future = self._spin_result_future
+        else:
+            self.get_logger().error("Unknown action type.")
+            return None
+
+        if future is not None:
+            rclpy.spin_until_future_complete(self, future, timeout_sec=timeout)
+            if future.done():
                 return self.reached()
             else:
-                self.get_logger().warn('Timed out waiting for navigation result.')
+                self.get_logger().warn('Timed out waiting for result.')
                 return None
         else:
             self.get_logger().warn('No goal has been sent yet.')
