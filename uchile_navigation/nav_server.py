@@ -3,6 +3,7 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from nav2_msgs.action import NavigateToPose
+from action_msgs.msg import GoalStatus
 from rclpy.action import ActionClient
 from tf_transformations import quaternion_from_euler, euler_from_quaternion
 from uchile_navigation.exceptions import NotInitializedError
@@ -73,9 +74,16 @@ class NavigationSkill(Node):
         goal_msg.pose.pose.orientation.z = q[2]
         goal_msg.pose.pose.orientation.w = q[3]
 
-        self._send_goal_future = self._nav_to_pose_client.send_goal_async(goal_msg)
+        self._send_goal_future = self._nav_to_pose_client.send_goal_async(
+            goal_msg,
+            feedback_callback=self._feedback_callback
+        )
         self._send_goal_future.add_done_callback(self._goal_response_callback)
         return True
+
+    def _feedback_callback(self, feedback_msg):
+        feedback = feedback_msg.feedback
+        self.get_logger().info(f'Received feedback: {feedback}')
 
     def _goal_response_callback(self, future):
         self._goal_handle = future.result()
@@ -128,19 +136,27 @@ class NavigationSkill(Node):
         else:
             self.get_logger().info('Failed to cancel goal.')
 
+
     def _reached_callback(self, future):
-        self.last_result = future.result().result
-        if self.last_result == 0:
+        result = future.result()
+        self.last_result = result.result
+        status_code = result.status
+
+        if status_code == GoalStatus.STATUS_SUCCEEDED:
             self.get_logger().info('Navigation succeeded')
-        elif self.last_result == 1:
+        elif status_code == GoalStatus.STATUS_CANCELED:
             self.get_logger().info('Navigation was canceled')
+        elif status_code == GoalStatus.STATUS_ABORTED:
+            self.get_logger().warn('Navigation aborted')
         else:
-            self.get_logger().warn(f'Navigation failed with result code: {self.last_result}')
+            self.get_logger().warn(f'Navigation ended with status code: {status_code}')
 
     def reached(self) -> bool:
-        """ Returns true if the last goal was successful
-        """
-        return self.last_result == 0
+        """Returns true if the last goal succeeded."""
+        if self._get_result_future is None:
+            return False
+        result = self._get_result_future.result()
+        return result.status == GoalStatus.STATUS_SUCCEEDED
 
     def look_point(self, x: float, y: float) -> None:
         """ Makes the robot look to a given point in space

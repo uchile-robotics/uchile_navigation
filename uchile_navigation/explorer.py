@@ -178,8 +178,8 @@ class AutoExplorerFFP(Node):
         marker.id = 0
         marker.type = Marker.POINTS
         marker.action = Marker.ADD
-        marker.scale.x = 0.03
-        marker.scale.y = 0.03
+        marker.scale.x = 0.1
+        marker.scale.y = 0.1
         marker.color = ColorRGBA(r=0.5, g=0.0, b=0.5, a=1.0)
         marker.pose.orientation.w = 1.0
 
