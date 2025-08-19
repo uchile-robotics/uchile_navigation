@@ -23,6 +23,7 @@ setup(
             'uchile_navigation_node = uchile_navigation.nav_server:main',
             'demo_nav = uchile_navigation.examples.demo_nav:main',
             'explorer = uchile_navigation.explorer:main',
+            'test = uchile_navigation.test:main'
         ],
     },
 )
