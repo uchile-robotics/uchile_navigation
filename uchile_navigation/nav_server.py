@@ -205,7 +205,7 @@ def main(args=None):
     rclpy.init(args=args)
     nav_skill = NavigationSkill()
     time.sleep(2)  
-    nav_skill.go_to_point(1.0, 2.0, 0.0)
+    nav_skill.go_to_point(8.23, 2.64, 0.0)
 
     rclpy.spin(nav_skill)
     nav_skill.destroy_node()
